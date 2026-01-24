@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-    const { username, password } = req.body;
+    const { name, surname, username, password } = req.body;
 
     const mongo = await db.connect();
     const exists = await mongo.collection("users").findOne({ username });
@@ -38,7 +38,7 @@ router.post("/signup", async (req, res) => {
         return res.status(409).send("Username not available.");
     } else {
         const hash = await bcrypt.hash(password, saltRounds);
-        await mongo.collection("users").insertOne({ username, hash });
+        await mongo.collection("users").insertOne({ name, surname, username, hash });
         const token = jwt.sign({ username }, SECRET);
         res.json({ token });
     }
