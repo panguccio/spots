@@ -3,6 +3,8 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const db = require("./db.js");
 const router = express.Router();
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const SECRET = "secretKey"
 
@@ -10,14 +12,20 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     const mongo = await db.connect();
-    const user = await mongo.collection("users").findOne({ username, password });
+    const user = await mongo.collection("users").findOne({ username });
 
-    if (user) {
-        const token = jwt.sign({ username }, SECRET);
-        return res.json({ token });
-    } else {
-        return res.status(403).send("Credentials don't exist.");
+    if (!user) {
+        return res.status(403).send("This username doesn't exist.");
     }
+
+    const match = await bcrypt.compare(password, user.hash);
+
+    if (!match) {
+        return res.status(403).send("Wrong password.");
+    }
+
+    const token = jwt.sign({ username }, SECRET);
+    res.json({ token });
 });
 
 router.post("/signup", async (req, res) => {
@@ -25,11 +33,13 @@ router.post("/signup", async (req, res) => {
 
     const mongo = await db.connect();
     const exists = await mongo.collection("users").findOne({ username });
+
     if (exists) {
         return res.status(409).send("Username not available.");
     } else {
-        const user = await mongo.collection("users").insertOne({ username, password });
+        const hash = await bcrypt.hash(password, saltRounds);
+        await mongo.collection("users").insertOne({ username, hash });
         const token = jwt.sign({ username }, SECRET);
-        return res.json({ token });
+        res.json({ token });
     }
 });
