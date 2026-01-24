@@ -43,3 +43,5 @@ router.post("/signup", async (req, res) => {
         res.json({ token });
     }
 });
+
+module.exports = router;
