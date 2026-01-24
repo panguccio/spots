@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const db = require("./db.js");
@@ -9,15 +10,26 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     const mongo = await db.connect();
-    const u = { username, password };
-    const user = await mongo.collection("users").findOne(u);
-    // console.log(user);
+    const user = await mongo.collection("users").findOne({ username, password });
 
     if (user) {
-        const token = jwt.sign({username}, SECRET)
-        return res.json({token})
+        const token = jwt.sign({ username }, SECRET);
+        return res.json({ token });
     } else {
-        res.status(403).send("Errore");
+        return res.status(403).send("Credentials don't exist.");
     }
-})
+});
 
+router.post("/signup", async (req, res) => {
+    const { username, password } = req.body;
+
+    const mongo = await db.connect();
+    const exists = await mongo.collection("users").findOne({ username });
+    if (exists) {
+        return res.status(409).send("Username not available.");
+    } else {
+        const user = await mongo.collection("users").insertOne({ username, password });
+        const token = jwt.sign({ username }, SECRET);
+        return res.json({ token });
+    }
+});
