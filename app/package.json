@@ -8,7 +8,7 @@
   "license": "ISC",
   "author": "Anna Guccione",
   "type": "commonjs",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

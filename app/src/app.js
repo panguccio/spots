@@ -4,7 +4,7 @@ app.use(express.json());
 const db = require('./db.js');
 // Cosa fa questo? Importa un costruttore?
 const { ObjectId } = require("mongodb")
-const auth = require('./auth.js');
+app.use("/auth", require('./routes/auth.js'));
 
 
 // list of sports fields (searchable)
