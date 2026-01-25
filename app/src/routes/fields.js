@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const db = require("./db.js");
-let verifyToken = require("./modules/auth.js");
+const db = require("../db.js");
+let verifyToken = require("../modules/auth.js");
 const { ObjectId } = require("mongodb");
-const getLimitTimes = require("../utils/dates");
+const getLimitTimes = require("../utils/dates.js");
 
 
 // list of sports fields (searchable)
-router.get("/api/fields", async (req, res) => {
+router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
     if (query) {
@@ -24,7 +24,7 @@ router.get("/api/fields", async (req, res) => {
 });
 
 // field details
-router.get("/api/fields/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     let field;
     try {
         let filter = { _id: new ObjectId(req.params.id) };
@@ -38,7 +38,7 @@ router.get("/api/fields/:id", async (req, res) => {
 });
 
 // availability for a specific date
-router.get("/api/fields/:id/slots", async (req, res) => {
+router.get("/:id/slots", async (req, res) => {
     const date = req.query.date;
     const { startDay, endDay } = getLimitTimes(date, "9:00", "22:00");
 
@@ -67,12 +67,16 @@ router.get("/api/fields/:id/slots", async (req, res) => {
 });
 
 // book a slot (authenticated)
-router.post("/fields/:id/bookings", verifyToken, async (req, res) => {
+router.post("/:id/bookings", verifyToken, async (req, res) => {
 
     // suppongo fornite come: YYYY:MM:DD, HH:MM, HH:MM
     const { date, startHour, endHour } = req.body;
 
     const { end, start } = getLimitTimes(date, startHour, endHour);
+
+    if (+end === +start) {
+        return res.status(409).send("Slot can't be 0 length.");
+    }
 
     const mongo = await db.connect();
 
