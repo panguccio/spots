@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("./db.js");
 let verifyToken = require("./modules/auth.js");
 const { ObjectId } = require("mongodb");
-const { getLimitTimes, getDayLimits } = require("../utils/dates");
+const getLimitTimes = require("../utils/dates");
 
 
 // list of sports fields (searchable)
@@ -25,10 +25,11 @@ router.get("/api/fields", async (req, res) => {
 
 // field details
 router.get("/api/fields/:id", async (req, res) => {
+    let field;
     try {
         let filter = { _id: new ObjectId(req.params.id) };
         const mongo = await db.connect();
-        const field = await mongo.collection("fields").findOne(filter);
+        field = await mongo.collection("fields").findOne(filter);
         if (!field) { return res.status(403).send("Field not found."); }
     } catch (error) {
         return res.status(403).send("Field not found.");
@@ -39,7 +40,7 @@ router.get("/api/fields/:id", async (req, res) => {
 // availability for a specific date
 router.get("/api/fields/:id/slots", async (req, res) => {
     const date = req.query.date;
-    const { startDay, endDay } = getDayLimits(date);
+    const { startDay, endDay } = getLimitTimes(date, "9:00", "22:00");
 
     const mongo = await db.connect();
     let filter = {
@@ -72,13 +73,11 @@ router.post("/fields/:id/bookings", verifyToken, async (req, res) => {
     const { date, startHour, endHour } = req.body;
 
     const { end, start } = getLimitTimes(date, startHour, endHour);
-    const { startDay, endDay } = getDayLimits(date);
 
     const mongo = await db.connect();
 
     let filter = {
         fieldId: new ObjectId(req.params.id),
-        start: { $gte: startDay, $lt: endDay },
         start: { $lt: end },
         end: { $gt: start }
     };
@@ -91,13 +90,13 @@ router.post("/fields/:id/bookings", verifyToken, async (req, res) => {
     const booking = { userId: new ObjectId(req.user.id), fieldId: new ObjectId(req.params.id), start, end }
     await mongo.collection("bookings").insertOne(booking);
 
-    res.sendStatus(204);
+    res.sendStatus(201).json({ start, end });
 });
 
 // cancel a booking (authenticated)
 router.delete("/fields/:id/bookings/:bookingId", verifyToken, async (req, res) => {
     const mongo = await db.connect();
-    const result = await mongo.collection("bookings").deleteOne({ _id: new Object(req.params.bookingId), userId: new Object(req.user.id) })
+    const result = await mongo.collection("bookings").deleteOne({ _id: new ObjectId(req.params.bookingId), userId: new ObjectId(req.user.id) })
     if (result.deletedCount === 0) { return res.status(409).send("No user's booking was found.") };
     res.sendStatus(204);
 });

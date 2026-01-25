@@ -10,8 +10,4 @@ function getLimitTimes(date, startHour, endHour) {
     return { end, start };
 }
 
-function getDayLimits(date) {
-    return getLimitTimes(date, "9:00", "22:00")
-}
-
-module.exports = { getLimitTimes, getDayLimits }
+module.exports = getLimitTimes;
