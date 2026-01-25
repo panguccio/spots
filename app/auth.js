@@ -24,7 +24,7 @@ router.post("/login", async (req, res) => {
         return res.status(403).send("Wrong password.");
     }
 
-    const token = jwt.sign({ username }, SECRET);
+    const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: "2h" });
     res.json({ token });
 });
 
@@ -38,8 +38,9 @@ router.post("/signup", async (req, res) => {
         return res.status(409).send("Username not available.");
     } else {
         const hash = await bcrypt.hash(password, saltRounds);
-        await mongo.collection("users").insertOne({ name, surname, username, hash });
-        const token = jwt.sign({ username }, SECRET);
+        const user = { name, surname, username, hash }
+        await mongo.collection("users").insertOne(user);
+        const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: "2h" });
         res.json({ token });
     }
 });
