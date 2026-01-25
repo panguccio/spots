@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("./db.js");
-let verifyToken = require("./modules/auth.js")
-const { ObjectId } = require("mongodb")
+let verifyToken = require("./modules/auth.js");
+const { ObjectId } = require("mongodb");
+const { getLimitTimes, getDayLimits } = require("../utils/dates");
 
 
 // list of sports fields (searchable)
@@ -66,7 +67,7 @@ router.get("/api/fields/:id/slots", async (req, res) => {
 
 // book a slot (authenticated)
 router.post("/fields/:id/bookings", verifyToken, async (req, res) => {
-    
+
     // suppongo fornite come: YYYY:MM:DD, HH:MM, HH:MM
     const { date, startHour, endHour } = req.body;
 
@@ -97,24 +98,8 @@ router.post("/fields/:id/bookings", verifyToken, async (req, res) => {
 router.delete("/fields/:id/bookings/:bookingId", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("bookings").deleteOne({ _id: new Object(req.params.bookingId), userId: new Object(req.user.id) })
-    if (result.deletedCount === 0) {return res.status(409).send("No user's booking was found.")};
+    if (result.deletedCount === 0) { return res.status(409).send("No user's booking was found.") };
     res.sendStatus(204);
 });
-
-function getLimitTimes(date, startHour, endHour) {
-    const start = new Date(date);
-    const end = new Date(date);
-
-    const [sh, sm] = startHour.split(":");
-    const [eh, em] = endHour.split(":");
-
-    start.setUTCHours(sh, sm, 0, 0);
-    end.setUTCHours(eh, em, 0, 0);
-    return { end, start };
-}
-
-function getDayLimits(date) {
-    return getLimitTimes(date, "9:00", "22:00")
-}
 
 module.exports = router;
