@@ -6,7 +6,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const SECRET = "secretKey"
+const SECRET = "secretKey" // sarebbe meglio non salvato qui
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
