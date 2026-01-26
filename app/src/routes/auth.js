@@ -5,7 +5,7 @@ const db = require("../db.js");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const SECRET = require("../modules/awt.js")
+const { SECRET } = require("../modules/awt.js")
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
