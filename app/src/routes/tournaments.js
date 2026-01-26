@@ -63,7 +63,7 @@ router.put("/:id", verifyToken, async (req, res) => {
         if (maxTeams) updateDocument.$set.maxTeams = Number(maxTeams);
         if (date) updateDocument.$set.date = new Date(date);
     }
-    
+
     if (teams && Array.isArray(teams)) {
         let teamsIds = teams.map(id => new ObjectId(id));
         updateDocument.$addToSet = { teamsIds: { $each: teamsIds } };
@@ -101,14 +101,27 @@ router.post("/:id/matches/generate", async (req, res) => {
 
     for (let i = 0; i < teamIds.length; i++) {
         for (let j = i + 1; j < teamIds.length; j++) {
-            matches.push({ team1Id: teamIds[i], team2Id: teamIds[j], date: tournament.date, tournamentId: tournament._id, status: "upcoming", result: null});
+            matches.push({ team1Id: teamIds[i], team2Id: teamIds[j], date: tournament.date, tournamentId: tournament._id, status: "upcoming", result: null });
         }
     }
 
     const result = await mongo.collection("matches").insertMany(matches);
-    await mongo.collection("tournaments").updateOne(filter,{ $push: { matchesIds: { $each: Object.values(result.insertedIds) } } });
+    await mongo.collection("tournaments").updateOne(filter, { $push: { matchesIds: { $each: Object.values(result.insertedIds) } } });
     res.status(201).json(matches);
 });
+
+// list matches
+router.get("/:id/matches", async (req, res) => {
+    const filter = { _id: new ObjectId(req.params.id) };
+    const mongo = await db.connect();
+    const tournament = await mongo.collection("tournaments").findOne(filter);
+    if (!tournament) return res.status(404).send("Tournament not found");
+    const matchesIds = tournament.matchesIds || [];
+    const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds.map(id => new ObjectId(id)) } }).toArray();
+    res.json(matches);
+});
+
+
 
 
 
