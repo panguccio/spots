@@ -25,7 +25,7 @@ router.post("/", verifyToken, async (req, res) => {
         return res.status(400).send("Missing fields.");
     }
     const mongo = await db.connect();
-    const tournament = { name, sport, maxTeams, status: "Active", startDate: new Date(date), creatorUserId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
+    const tournament = { name, sport, maxTeams, status: "active", date: new Date(date), creatorUserId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
     const result = await mongo.collection("tournaments").insertOne(tournament)
     res.status(201).json(result);
 })
@@ -39,7 +39,7 @@ router.get("/:id", async (req, res) => {
         tournament = await mongo.collection("tournaments").findOne(filter);
         if (!tournament) { return res.status(403).send("Tournament not found."); }
     } catch (error) {
-        return res.status(403).send("Tournament not found (malformed ID).");
+        return res.status(404).send("Tournament not found or malformed ID.");
     }
     res.json(tournament);
 });
@@ -62,11 +62,11 @@ router.put("/:id", verifyToken, async (req, res) => {
     if (name) updateDocument.$set.name = name;
     if (sport) updateDocument.$set.sport = sport;
     if (maxTeams) updateDocument.$set.maxTeams = Number(maxTeams);
-    if (date) updateDocument.$set.startDate = new Date(date);
+    if (date) updateDocument.$set.date = new Date(date);
     if (teams && Array.isArray(teams)) {
         // todo: check if team already exists
         let teamsIds = teams.map(id => new ObjectId(id));
-        updateDocument.$push = { teamsIds: { $each: teamsIds } };
+        updateDocument.$addToSet = { teamsIds: { $each: teamsIds } };
     }
     try {
         result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
@@ -81,12 +81,33 @@ router.put("/:id", verifyToken, async (req, res) => {
     res.json(result);
 });
 
-// cancel a booking 
+// cancel the tournament (creator only)
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
-    const result = await mongo.collection("tournaments").deleteOne({_id: new ObjectId(req.params.id), creatorUserId: new ObjectId(req.user.id)})
+    const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), creatorUserId: new ObjectId(req.user.id) })
     if (result.deletedCount === 0) { return res.status(409).send("User not authorized or tournament not found.") };
     res.status(201).json(result);
+});
+
+// generate match schedule
+router.post("/:id/matches/generate", async (req, res) => {
+    const mongo = await db.connect();
+    const filter = { _id: new ObjectId(req.params.id) };
+    const tournament = await mongo.collection("tournaments").findOne(filter);
+    if (!tournament) return res.status(404).send("Tournament not found.");
+    const teamIds = tournament.teamsIds;
+
+    let matches = [];
+
+    for (let i = 0; i < teamIds.length; i++) {
+        for (let j = i + 1; j < teamIds.length; j++) {
+            matches.push({ team1Id: teamIds[i], team2Id: teamIds[j], date: tournament.date, tournamentId: tournament._id, status: "upcoming", result: null});
+        }
+    }
+
+    const result = await mongo.collection("matches").insertMany(matches);
+    await mongo.collection("tournaments").updateOne(filter,{ $push: { matchesIds: { $each: Object.values(result.insertedIds) } } });
+    res.status(201).json(matches);
 });
 
 
