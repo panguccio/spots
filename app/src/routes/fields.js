@@ -11,12 +11,7 @@ router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
     if (query) {
-        filter = {
-            $or: [
-                { name: { $regex: query, $options: "i" } },
-                { address: { $regex: query, $options: "i" } }
-            ]
-        }
+        filter = { $or: [{ name: { $regex: query, $options: "i" } }, { address: { $regex: query, $options: "i" } }] }
     };
     const mongo = await db.connect();
     const fields = await mongo.collection("fields").find(filter).toArray();
@@ -30,7 +25,7 @@ router.get("/:id", async (req, res) => {
         const filter = { _id: new ObjectId(req.params.id) };
         const mongo = await db.connect();
         field = await mongo.collection("fields").findOne(filter);
-        if (!field) { return res.status(403).send("Field not found."); }
+        if (!field) { return res.status(404).send("Field not found."); }
     } catch (error) {
         return res.status(403).send("Field not found.");
     }
@@ -69,7 +64,7 @@ router.get("/:id/slots", async (req, res) => {
 // book a slot (authenticated)
 router.post("/:id/bookings", verifyToken, async (req, res) => {
 
-    // suppongo fornite come: YYYY:MM:DD, HH:MM, HH:MM
+    // suppongo fornite come: YYYY-MM-DD, HH:MM, HH:MM
     const { date, startHour, endHour } = req.body;
 
     const { end, start } = getLimitTimes(date, startHour, endHour);
@@ -80,11 +75,7 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
 
     const mongo = await db.connect();
 
-    const filter = {
-        fieldId: new ObjectId(req.params.id),
-        start: { $lt: end },
-        end: { $gt: start }
-    };
+    const filter = { fieldId: new ObjectId(req.params.id), start: { $lt: end }, end: { $gt: start } };
     const conflict = await mongo.collection("bookings").findOne(filter);
 
     if (conflict) {
@@ -101,7 +92,7 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
 router.delete("/fields/:id/bookings/:bookingId", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("bookings").deleteOne({ _id: new ObjectId(req.params.bookingId), userId: new ObjectId(req.user.id) })
-    if (result.deletedCount === 0) { return res.status(409).send("No user's booking was found.") };
+    if (result.deletedCount === 0) { return res.status(409).send("User not authorized or tournament not found.") };
     res.status(201).json(result);
 });
 

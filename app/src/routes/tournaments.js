@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", verifyToken, async (req, res) => {
     // assuming date comes as: YYYY-MM-DD
     // todo: if (!req.body) {}
-    const { name, sport, maxTeams, date, team: teams } = req.body;
+    const { name, sport, maxTeams, date, teams } = req.body;
 
     let result;
     const mongo = await db.connect();
@@ -58,26 +58,26 @@ router.put("/:id", verifyToken, async (req, res) => {
 
     if (name || sport || maxTeams || date) {
         updateDocument = { $set: {} };
+        if (name) updateDocument.$set.name = name;
+        if (sport) updateDocument.$set.sport = sport;
+        if (maxTeams) updateDocument.$set.maxTeams = Number(maxTeams);
+        if (date) updateDocument.$set.date = new Date(date);
     }
-    if (name) updateDocument.$set.name = name;
-    if (sport) updateDocument.$set.sport = sport;
-    if (maxTeams) updateDocument.$set.maxTeams = Number(maxTeams);
-    if (date) updateDocument.$set.date = new Date(date);
+    
     if (teams && Array.isArray(teams)) {
-        // todo: check if team already exists
         let teamsIds = teams.map(id => new ObjectId(id));
         updateDocument.$addToSet = { teamsIds: { $each: teamsIds } };
     }
-    try {
-        result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
-        if (result.matchedCount === 0) {
-            return res.status(404).send("Tournament not found.");
-        }
-    } catch (error) {
-        return res.status(403).send("Something went wrong.");
+
+    if (Object.keys(updateDocument).length === 0) {
+        return res.status(400).send("No fields to update.");
     }
 
-    // TODO: metodo per aggiornare i match (che vengono fatti in automatico)
+    result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
+    if (result.matchedCount === 0) {
+        return res.status(404).send("Tournament not found.");
+    }
+
     res.json(result);
 });
 
