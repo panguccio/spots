@@ -78,7 +78,7 @@ router.put("/:id", verifyToken, async (req, res) => {
         return res.status(404).send("Tournament not found.");
     }
 
-    res.json(result);
+    res.status(201).json(result);
 });
 
 // cancel the tournament (creator only)
