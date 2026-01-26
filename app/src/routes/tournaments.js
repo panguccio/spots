@@ -37,9 +37,9 @@ router.get("/:id", async (req, res) => {
         const filter = { _id: new ObjectId(req.params.id) };
         const mongo = await db.connect();
         tournament = await mongo.collection("tournaments").findOne(filter);
-        if (!tournament) { return res.status(403).send("Tournament not found."); }
+        if (!tournament) { return res.status(404).send("Tournament not found."); }
     } catch (error) {
-        return res.status(404).send("Tournament not found or malformed ID.");
+        return res.status(400).send("Tournament not found or malformed ID.");
     }
     res.json(tournament);
 });

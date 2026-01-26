@@ -27,7 +27,7 @@ router.get("/:id", async (req, res) => {
         field = await mongo.collection("fields").findOne(filter);
         if (!field) { return res.status(404).send("Field not found."); }
     } catch (error) {
-        return res.status(403).send("Field not found.");
+        return res.status(400).send("Field not found.");
     }
     res.json(field);
 });
