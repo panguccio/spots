@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db.js");
-let verifyToken = require("../modules/auth.js");
+let { verifyToken } = require("../modules/awt.js");
 const { ObjectId } = require("mongodb");
 const getLimitTimes = require("../utils/dates.js");
 
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     let field;
     try {
-        let filter = { _id: new ObjectId(req.params.id) };
+        const filter = { _id: new ObjectId(req.params.id) };
         const mongo = await db.connect();
         field = await mongo.collection("fields").findOne(filter);
         if (!field) { return res.status(403).send("Field not found."); }
@@ -43,7 +43,7 @@ router.get("/:id/slots", async (req, res) => {
     const { startDay, endDay } = getLimitTimes(date, "9:00", "22:00");
 
     const mongo = await db.connect();
-    let filter = {
+    const filter = {
         fieldId: new ObjectId(req.params.id),
         start: { $gte: startDay, $lt: endDay }
     };
@@ -80,7 +80,7 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
 
     const mongo = await db.connect();
 
-    let filter = {
+    const filter = {
         fieldId: new ObjectId(req.params.id),
         start: { $lt: end },
         end: { $gt: start }
@@ -92,9 +92,9 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
     }
 
     const booking = { userId: new ObjectId(req.user.id), fieldId: new ObjectId(req.params.id), start, end }
-    await mongo.collection("bookings").insertOne(booking);
+    const result = await mongo.collection("bookings").insertOne(booking);
 
-    res.sendStatus(201).json({ start, end });
+    res.status(201).json(result);
 });
 
 // cancel a booking (authenticated)
@@ -102,7 +102,7 @@ router.delete("/fields/:id/bookings/:bookingId", verifyToken, async (req, res) =
     const mongo = await db.connect();
     const result = await mongo.collection("bookings").deleteOne({ _id: new ObjectId(req.params.bookingId), userId: new ObjectId(req.user.id) })
     if (result.deletedCount === 0) { return res.status(409).send("No user's booking was found.") };
-    res.sendStatus(204);
+    res.status(201).json(result);
 });
 
 module.exports = router;
