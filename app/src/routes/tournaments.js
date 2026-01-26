@@ -6,7 +6,7 @@ const db = require("../db.js");
 const { ObjectId } = require("mongodb");
 let { verifyToken } = require("../modules/awt.js");
 
-// list of sports tournaments
+// list of tournaments
 router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
@@ -18,14 +18,14 @@ router.get("/", async (req, res) => {
     res.json(tournaments);
 });
 
-
+// create new tournament
 router.post("/", verifyToken, async (req, res) => {
     const { name, sport, maxTeams, date } = req.body;
     if (!name || !sport || !maxTeams || !date) {
         return res.status(400).send("Missing fields.");
     }
     const mongo = await db.connect();
-    const tournament = { name, sport, maxTeams, status: "Active", startDate: new Date(date), matchesIds: [], teamsIds: [] }
+    const tournament = { name, sport, maxTeams, status: "Active", startDate: new Date(date), creatorUserId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
     const result = await mongo.collection("tournaments").insertOne(tournament)
     res.status(201).json(result);
 })
@@ -46,6 +46,7 @@ router.get("/:id", async (req, res) => {
 
 // edit tournament data
 router.put("/:id", verifyToken, async (req, res) => {
+    // assuming date comes as: YYYY-MM-DD
     // todo: if (!req.body) {}
     const { name, sport, maxTeams, date, team: teams } = req.body;
 
@@ -58,7 +59,6 @@ router.put("/:id", verifyToken, async (req, res) => {
     if (name || sport || maxTeams || date) {
         updateDocument = { $set: {} };
     }
-
     if (name) updateDocument.$set.name = name;
     if (sport) updateDocument.$set.sport = sport;
     if (maxTeams) updateDocument.$set.maxTeams = Number(maxTeams);
@@ -81,8 +81,12 @@ router.put("/:id", verifyToken, async (req, res) => {
     res.json(result);
 });
 
+// cancel a booking 
 router.delete("/:id", verifyToken, async (req, res) => {
-    
+    const mongo = await db.connect();
+    const result = await mongo.collection("tournaments").deleteOne({_id: new ObjectId(req.params.id), creatorUserId: new ObjectId(req.user.id)})
+    if (result.deletedCount === 0) { return res.status(409).send("User not authorized or tournament not found.") };
+    res.status(201).json(result);
 });
 
 
