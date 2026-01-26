@@ -5,8 +5,7 @@ const db = require("../db.js");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-
-const SECRET = "secretKey" // sarebbe meglio non salvato qui
+const SECRET = require("../modules/token.js")
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
