@@ -69,8 +69,16 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
 
     const { end, start } = getLimitTimes(date, startHour, endHour);
 
+    if (start < new Date()) {
+        return res.status(409).send("Can't book past slots.");
+    }
+
     if (+end === +start) {
         return res.status(409).send("Slot can't be 0 length.");
+    }
+
+    if (end < start) {
+        return res.status(409).send("End time must be after start time.");
     }
 
     const mongo = await db.connect();
