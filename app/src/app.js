@@ -1,4 +1,5 @@
 const express = require("express");
+let init = require("./config/init.js")
 const app = express();
 app.use(express.json());
 
@@ -9,7 +10,10 @@ app.use("/api/tournaments", require("./routes/tournaments.js"));
 app.use("/api/matches", require("./routes/matches.js"));
 app.use("/api/users", require("./routes/users.js"));
 
-app.listen(3000, () => {
-
+init().then(() => {
+    app.listen(3000, () => {
+        console.log("Server listening...");
+    });
 });
+
 
