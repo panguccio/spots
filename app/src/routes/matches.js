@@ -31,3 +31,4 @@ router.put("/:id/result", async (req, res) => {
     res.status(200).json(result);
 });
 
+module.exports = router;

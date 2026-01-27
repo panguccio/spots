@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db.js");
 const { ObjectId } = require("mongodb");
+let { verifyToken } = require("../modules/awt.js");
 
 // list of users (searchable)
 router.get("/", async (req, res) => {
@@ -43,3 +44,4 @@ router.get("/:id", async (req, res) => {
     res.json(user);
 });
 
+module.exports = router;

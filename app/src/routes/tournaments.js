@@ -121,8 +121,20 @@ router.get("/:id/matches", async (req, res) => {
     res.json(matches);
 });
 
+// tournaments standings TO DOOOOOOOO
+router.get("/:id/standings", async (req, res) => {
+    const mongo = await db.connect();
+    const filter = { _id: new ObjectId(req.params.id) };
+    const tournament = await mongo.collection("tournaments").findOne(filter);
+    if (!tournament) return res.status(404).send("Tournament not found");
+    const matchesIds = tournament.matchesIds || [];
+    const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds.map(id => new ObjectId(id)) } }).toArray();
+    if (tournament.sport === "football") {
+        
+    } else if (tournament.sport === "volleyball" || tournament.sport === "basketball") {
 
-
+    }
+});
 
 
 module.exports = router;
