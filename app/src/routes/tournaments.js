@@ -6,7 +6,13 @@ const db = require("../config/db.js");
 const { ObjectId } = require("mongodb");
 let { verifyToken } = require("../modules/awt.js");
 
-// list of tournaments
+const points = {
+            football: [3, 0, 1],
+            volleyball: [2, 0, 0],
+            basketball: [2, 0, 0]
+        }
+
+// list of tournaments (query)
 router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
@@ -44,7 +50,7 @@ router.get("/:id", async (req, res) => {
     res.json(tournament);
 });
 
-// edit tournament data
+// edit tournament data (auth)
 router.put("/:id", verifyToken, async (req, res) => {
     // assuming date comes as: YYYY-MM-DD
     // todo: if (!req.body) {}
@@ -53,7 +59,8 @@ router.put("/:id", verifyToken, async (req, res) => {
     let result;
     const mongo = await db.connect();
 
-    const filter = { _id: new ObjectId(req.params.id), organizerId: req.user.id };
+    // TO DO!!! NON FUNZIONA IL FILTRO UTENTE!!!
+    const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
     let updateDocument = {};
 
     if (name || sport || maxTeams || date) {
@@ -91,7 +98,6 @@ router.delete("/:id", verifyToken, async (req, res) => {
 });
 
 // generate match schedule
-// forse lo può fare solo l'organizer e se non sei l'organizer ti torna quella dell'organizer?
 router.post("/:id/matches/generate", async (req, res) => {
     const mongo = await db.connect();
     const filter = { _id: new ObjectId(req.params.id) };
@@ -123,20 +129,36 @@ router.get("/:id/matches", async (req, res) => {
     res.json(matches);
 });
 
-// tournaments standings TO DOOOOOOOO
+// tournaments standings
 router.get("/:id/standings", async (req, res) => {
-    const mongo = await db.connect();
-    const filter = { _id: new ObjectId(req.params.id) };
-    const tournament = await mongo.collection("tournaments").findOne(filter);
-    if (!tournament) return res.status(404).send("Tournament not found");
-    const matchesIds = tournament.matchesIds || [];
-    const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds.map(id => new ObjectId(id)) } }).toArray();
-    if (tournament.sport === "football") {
-        
-    } else if (tournament.sport === "volleyball" || tournament.sport === "basketball") {
+    try {
+        const mongo = await db.connect();
+        const tournament = await mongo.collection("tournaments").findOne({ _id: new ObjectId(req.params.id) });
+        if (!tournament) return res.status(404).send("Tournament not found");
+        const matchesIds = (tournament.matchesIds || []).map(id => new ObjectId(id));
+        const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds } }).toArray();
 
+        const teams = computePoints(matches, ...points[tournament.sport]);
+        let standings = []
+        for (const team in teams) standings.push(team);
+        standings.sort((a, b) => teams[b] - teams[a]);
+        res.json(standings);
+
+    } catch (error) {
+        console.error(err);
+        res.status(500).send("Something went wrong in computing the standings.");
     }
 });
 
+let computePoints = function(matches, win, lose, draw) {
+    let teams = {};
+    for (const { team1Id, team2Id, points1, points2 } of matches) {
+        if (points1 === undefined || points2 === undefined) continue;
+        let [p1, p2] = points1 > points2 ? [win, lose] : points1 < points2 ? [lose, win] : [draw, draw];
+        teams[team1Id] = (teams[team1Id] || 0) + p1;
+        teams[team2Id] = (teams[team2Id] || 0) + p2;
+    }
+    return teams;
+}
 
 module.exports = router;
