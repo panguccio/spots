@@ -53,7 +53,7 @@ router.put("/:id", verifyToken, async (req, res) => {
     let result;
     const mongo = await db.connect();
 
-    const filter = { _id: new ObjectId(req.params.id) };
+    const filter = { _id: new ObjectId(req.params.id), organizerId: req.user.id };
     let updateDocument = {};
 
     if (name || sport || maxTeams || date) {
@@ -75,13 +75,14 @@ router.put("/:id", verifyToken, async (req, res) => {
 
     result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
     if (result.matchedCount === 0) {
-        return res.status(404).send("Tournament not found.");
+        return res.status(404).send("User not authorized (or invalid tournament id).");
     }
 
     res.status(201).json(result);
 });
 
 // cancel the tournament (creator only)
+// should it delete all the matches too?
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) })
@@ -90,6 +91,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
 });
 
 // generate match schedule
+// forse lo può fare solo l'organizer e se non sei l'organizer ti torna quella dell'organizer?
 router.post("/:id/matches/generate", async (req, res) => {
     const mongo = await db.connect();
     const filter = { _id: new ObjectId(req.params.id) };

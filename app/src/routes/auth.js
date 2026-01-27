@@ -9,21 +9,16 @@ const { SECRET } = require("../modules/awt.js")
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
-
     const mongo = await db.connect();
     const user = await mongo.collection("users").findOne({ username });
-
     if (!user) {
         return res.status(403).send("This username doesn't exist.");
     }
-
     const match = await bcrypt.compare(password, user.hash);
-
     if (!match) {
         return res.status(403).send("Wrong password.");
     }
-
-    const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: "2h" });
+    const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: "24h" });
     res.json({ token });
 });
 
@@ -39,7 +34,7 @@ router.post("/signup", async (req, res) => {
         const hash = await bcrypt.hash(password, saltRounds);
         const user = { name, surname, username, hash }
         await mongo.collection("users").insertOne(user);
-        const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: "2h" });
+        const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: "24h" });
         res.json({ token });
     }
 });
