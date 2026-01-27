@@ -11,7 +11,7 @@ let pipeline = match => [
     { $project: { hash: 0 } }
 ]
 
-// list of users (searchable)
+// list of users (query)
 router.get("/", async (req, res) => {
     const query = req.query.q;
     let match = {};
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
     res.json(users);
 });
 
-// if authenticated, returns information about the current user
+// returns information about the current user (auth)
 router.get("/whoami", verifyToken, async (req, res) => {
     let user;
     const match = { _id: new ObjectId(req.user.id) };
@@ -33,7 +33,7 @@ router.get("/whoami", verifyToken, async (req, res) => {
     res.json(user);
 })
 
-// details about a user with the specific id
+// details about a user (id)
 router.get("/:id", async (req, res) => {
     let user;
     const match = { _id: new ObjectId(req.params.id) };

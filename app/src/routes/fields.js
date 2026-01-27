@@ -6,7 +6,7 @@ const { ObjectId } = require("mongodb");
 const getLimitTimes = require("../utils/dates.js");
 
 
-// list of sports fields (searchable)
+// list of sports fields (query)
 router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     res.json(fields);
 });
 
-// field details
+// field details (id)
 router.get("/:id", async (req, res) => {
     let field;
     try {
@@ -32,7 +32,7 @@ router.get("/:id", async (req, res) => {
     res.json(field);
 });
 
-// availability for a specific date
+// availability for a specific date (id) (query)
 router.get("/:id/slots", async (req, res) => {
     const date = req.query.date;
     const { startDay, endDay } = getLimitTimes(date, "9:00", "22:00");
@@ -61,7 +61,7 @@ router.get("/:id/slots", async (req, res) => {
     res.json(availableSlots);
 });
 
-// book a slot (authenticated)
+// book a slot (id) (auth) (body)
 router.post("/:id/bookings", verifyToken, async (req, res) => {
 
     // suppongo fornite come: YYYY-MM-DD, HH:MM, HH:MM
@@ -96,7 +96,7 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
     res.status(201).json(result);
 });
 
-// cancel a booking (authenticated)
+// cancel a booking (id) (auth)
 router.delete("/fields/:id/bookings/:bookingId", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("bookings").deleteOne({ _id: new ObjectId(req.params.bookingId), userId: new ObjectId(req.user.id) })

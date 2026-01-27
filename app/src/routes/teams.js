@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
     res.json(teams);
 });
 
-// create new team
+// create new team (body)
 router.post("/", verifyToken, async (req, res) => {
     const { name } = req.body;
     if (!name) {
@@ -42,7 +42,7 @@ router.get("/:id", async (req, res) => {
     res.json(team);
 });
 
-// edit team (auth)
+// edit team (id) (auth)
 router.put("/:id", verifyToken, async (req, res) => {
     // assuming date comes as: YYYY-MM-DD
     const { name, addPlayers, remPlayers } = req.body;
@@ -80,7 +80,7 @@ router.put("/:id", verifyToken, async (req, res) => {
     res.status(204).json(result);
 });
 
-// list of players
+// list of players (id)
 router.get("/:id/players", async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();

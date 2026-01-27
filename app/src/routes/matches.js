@@ -3,21 +3,17 @@ const router = express.Router();
 const db = require("../config/db.js");
 const { ObjectId } = require("mongodb");
 
-// match details
+// match details (id)
 router.get("/:id", async (req, res) => {
     let match;
-    try {
-        const filter = { _id: new ObjectId(req.params.id) };
-        const mongo = await db.connect();
-        match = await mongo.collection("matches").findOne(filter);
-        if (!match) { return res.status(404).send("Match not found."); }
-    } catch (error) {
-        return res.status(400).send("Match not found or malformed ID.");
-    }
+    const filter = { _id: new ObjectId(req.params.id) };
+    const mongo = await db.connect();
+    match = await mongo.collection("matches").findOne(filter);
+    if (!match) { return res.status(404).send("Match not found."); }
     res.json(match);
 });
 
-// enter match result
+// enter match result (id) (body)
 router.put("/:id/result", async (req, res) => {
     const { points1, points2 } = req.body;
 

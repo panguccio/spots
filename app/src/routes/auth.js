@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { SECRET } = require("../modules/jwt.js")
 
+// user login (body)
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
     const mongo = await db.connect();
@@ -21,6 +22,7 @@ router.post("/login", async (req, res) => {
     res.json({ token });
 });
 
+// register a new user (body)
 router.post("/signup", async (req, res) => {
     const { name, surname, username, password } = req.body;
 

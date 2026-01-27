@@ -5,12 +5,7 @@ const router = express.Router();
 const db = require("../config/db.js");
 const { ObjectId } = require("mongodb");
 let { verifyToken } = require("../modules/jwt.js");
-
-const points = {
-            football: [3, 0, 1],
-            volleyball: [2, 0, 0],
-            basketball: [2, 0, 0]
-        }
+const { computePoints, points } = require("../utils/points.js");
 
 // list of tournaments (query)
 router.get("/", async (req, res) => {
@@ -24,7 +19,7 @@ router.get("/", async (req, res) => {
     res.json(tournaments);
 });
 
-// create new tournament
+// create new tournament (auth)
 router.post("/", verifyToken, async (req, res) => {
     const { name, sport, maxTeams, date } = req.body;
     if (!name || !sport || !maxTeams || !date) {
@@ -36,7 +31,7 @@ router.post("/", verifyToken, async (req, res) => {
     res.status(201).json(result);
 })
 
-// tournament details
+// tournament details (id)
 router.get("/:id", async (req, res) => {
     let tournament;
     const filter = { _id: new ObjectId(req.params.id) };
@@ -46,10 +41,9 @@ router.get("/:id", async (req, res) => {
     res.json(tournament);
 });
 
-// edit tournament data (auth)
+// edit tournament data (id) (auth) (body)
 router.put("/:id", verifyToken, async (req, res) => {
     // assuming date comes as: YYYY-MM-DD
-    // todo: if (!req.body) {}
     const { name, sport, maxTeams, date, addTeams, remTeams } = req.body;
 
     let result;
@@ -88,7 +82,7 @@ router.put("/:id", verifyToken, async (req, res) => {
     res.status(201).json(result);
 });
 
-// cancel the tournament (organizer only)
+// cancel the tournament (id) (auth)
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) });
@@ -97,7 +91,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
     res.status(201).json(result);
 });
 
-// generate match schedule (organizer only)
+// generate match schedule (id) (auth)
 router.post("/:id/matches/generate", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
@@ -128,7 +122,7 @@ router.post("/:id/matches/generate", verifyToken, async (req, res) => {
     res.status(201).json(matches);
 });
 
-// list matches
+// list matches (id)
 router.get("/:id/matches", async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();
@@ -139,7 +133,7 @@ router.get("/:id/matches", async (req, res) => {
     res.json(matches);
 });
 
-// tournaments standings
+// tournaments standings (id)
 router.get("/:id/standings", async (req, res) => {
     try {
         const mongo = await db.connect();
@@ -156,37 +150,8 @@ router.get("/:id/standings", async (req, res) => {
 
     } catch (error) {
         console.error(err);
-        res.status(500).send("Something went wrong in computing the standings.");
+        res.status(500).send("Error in computing the standings.");
     }
 });
-
-let computePoints = function(matches, win, lose, draw) {
-    let teams = {};
-    for (const { team1Id, team2Id, points1, points2 } of matches) {
-        if (points1 === undefined || points2 === undefined) continue;
-
-        let createTeam = () => ({played: 0, scored: 0, conceded: 0, points: 0})
-
-        if (!teams[team1Id]) teams[team1Id] = createTeam();
-        if (!teams[team2Id]) teams[team2Id] = createTeam();
-
-        teams[team1Id].played = teams[team1Id].played + 1;
-        teams[team2Id].played = teams[team2Id].played + 1;
-
-        teams[team1Id].scored = teams[team1Id].scored + points1;
-        teams[team2Id].scored = teams[team2Id].scored + points2;
-
-        teams[team1Id].conceded = teams[team1Id].conceded + points2;
-        teams[team2Id].conceded = teams[team2Id].conceded + points1;
-
-        let [p1, p2] = points1 > points2 ? [win, lose] : points1 < points2 ? [lose, win] : [draw, draw];
-        teams[team1Id].points = teams[team1Id].points + p1;
-        teams[team2Id].points = teams[team2Id].points + p2;
-    }
-    for (const id in teams) {
-    teams[id].diff = teams[id].scored - teams[id].conceded;
-    }
-    return teams;
-}
 
 module.exports = router;
