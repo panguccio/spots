@@ -1,11 +1,10 @@
-"use strict";
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.js");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const { SECRET } = require("../modules/awt.js")
+const { SECRET } = require("../modules/jwt.js")
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;

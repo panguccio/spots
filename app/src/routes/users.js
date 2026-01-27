@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db.js");
 const { ObjectId } = require("mongodb");
-let { verifyToken } = require("../modules/awt.js");
+let { verifyToken } = require("../modules/jwt.js");
 
 let pipeline = match => [
     { $match: match },
