@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db.js");
 const { ObjectId } = require("mongodb");
-let { verifyToken } = require("../modules/awt.js");
+let { verifyToken } = require("../modules/jwt.js");
 
 const points = {
             football: [3, 0, 1],
@@ -96,17 +96,17 @@ router.put("/:id", verifyToken, async (req, res) => {
 // should it delete all the matches too?
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
-    const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) })
+    const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) });
     if (result.deletedCount === 0) { return res.status(409).send("User not authorized or tournament not found.") };
     res.status(201).json(result);
 });
 
-// generate match schedule
-router.post("/:id/matches/generate", async (req, res) => {
+// generate match schedule (auth)
+router.post("/:id/matches/generate", verifyToken, async (req, res) => {
     const mongo = await db.connect();
-    const filter = { _id: new ObjectId(req.params.id) };
+    const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
     const tournament = await mongo.collection("tournaments").findOne(filter);
-    if (!tournament) return res.status(404).send("Tournament not found.");
+    if (!tournament) return res.status(404).send("User is not organizer of this tournament (unauthorized).");
     const teamIds = tournament.teamsIds;
 
     let matches = [];
@@ -143,10 +143,10 @@ router.get("/:id/standings", async (req, res) => {
         const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds } }).toArray();
 
         const teams = computePoints(matches, ...points[tournament.sport]);
-        let standings = []
+        let standings = [];
         for (const team in teams) standings.push(team);
-        standings.sort((a, b) => teams[b] - teams[a]);
-        res.json(standings);
+        standings.sort((a,b) => (teams[b].points - teams[a].points || teams[b].diff - teams[a].diff || teams[b].scored - teams[a].scored));
+        res.json({teams, standings});
 
     } catch (error) {
         console.error(err);
@@ -158,9 +158,27 @@ let computePoints = function(matches, win, lose, draw) {
     let teams = {};
     for (const { team1Id, team2Id, points1, points2 } of matches) {
         if (points1 === undefined || points2 === undefined) continue;
+
+        let createTeam = () => ({played: 0, scored: 0, conceded: 0, points: 0})
+
+        if (!teams[team1Id]) teams[team1Id] = createTeam();
+        if (!teams[team2Id]) teams[team2Id] = createTeam();
+
+        teams[team1Id].played = teams[team1Id].played + 1;
+        teams[team2Id].played = teams[team2Id].played + 1;
+
+        teams[team1Id].scored = teams[team1Id].scored + points1;
+        teams[team2Id].scored = teams[team2Id].scored + points2;
+
+        teams[team1Id].conceded = teams[team1Id].conceded + points2;
+        teams[team2Id].conceded = teams[team2Id].conceded + points1;
+
         let [p1, p2] = points1 > points2 ? [win, lose] : points1 < points2 ? [lose, win] : [draw, draw];
-        teams[team1Id] = (teams[team1Id] || 0) + p1;
-        teams[team2Id] = (teams[team2Id] || 0) + p2;
+        teams[team1Id].points = teams[team1Id].points + p1;
+        teams[team2Id].points = teams[team2Id].points + p2;
+    }
+    for (const id in teams) {
+    teams[id].diff = teams[id].scored - teams[id].conceded;
     }
     return teams;
 }
