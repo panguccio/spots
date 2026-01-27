@@ -21,12 +21,12 @@ router.get("/:id", async (req, res) => {
 router.put("/:id/result", async (req, res) => {
     const { points1, points2 } = req.body;
 
-    if (points1 == null || points2 == null) {
+    if (points1 == undefined || points2 == undefined) {
         return res.status(400).send("Missing points.");
     }
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();
-    const updateDocument = {$set: {points1, points2}}
+    const updateDocument = {$set: {points1, points2, status: "played"}}
     const result = await mongo.collection("matches").updateOne(filter, updateDocument);
     res.status(200).json(result);
 });

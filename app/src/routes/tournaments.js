@@ -39,14 +39,10 @@ router.post("/", verifyToken, async (req, res) => {
 // tournament details
 router.get("/:id", async (req, res) => {
     let tournament;
-    try {
-        const filter = { _id: new ObjectId(req.params.id) };
-        const mongo = await db.connect();
-        tournament = await mongo.collection("tournaments").findOne(filter);
-        if (!tournament) { return res.status(404).send("Tournament not found."); }
-    } catch (error) {
-        return res.status(400).send("Tournament not found or malformed ID.");
-    }
+    const filter = { _id: new ObjectId(req.params.id) };
+    const mongo = await db.connect();
+    tournament = await mongo.collection("tournaments").findOne(filter);
+    if (!tournament) { return res.status(404).send("Tournament not found."); }
     res.json(tournament);
 });
 
@@ -86,27 +82,37 @@ router.put("/:id", verifyToken, async (req, res) => {
 
     result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
     if (result.matchedCount === 0) {
-        return res.status(404).send("User not authorized (or invalid tournament id).");
+        return res.status(404).send("User is not organizer of this tournament (unauthorized).");
     }
 
     res.status(201).json(result);
 });
 
-// cancel the tournament (creator only)
-// should it delete all the matches too?
+// cancel the tournament (organizer only)
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) });
-    if (result.deletedCount === 0) { return res.status(409).send("User not authorized or tournament not found.") };
+    if (result.deletedCount === 0) { return res.status(409).send("User is not organizer of this tournament (unauthorized).") };
+    await mongo.collection("matches").deleteMany({ tournamentId: new ObjectId(req.params.id) });
     res.status(201).json(result);
 });
 
-// generate match schedule (auth)
+// generate match schedule (organizer only)
 router.post("/:id/matches/generate", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
     const tournament = await mongo.collection("tournaments").findOne(filter);
     if (!tournament) return res.status(404).send("User is not organizer of this tournament (unauthorized).");
+    const matchesIds = tournament.matchesIds || [];
+    
+    
+    const started = await mongo.collection("matches").findOne({ _id: { $in: matchesIds }, status: "played" });
+    if (started) {
+        return res.status(404).send("Schedule generation failed because some matches are already played.");
+    } else {
+        await mongo.collection("matches").deleteMany({ tournamentId: new ObjectId(req.params.id) });
+    }
+
     const teamIds = tournament.teamsIds;
 
     let matches = [];
