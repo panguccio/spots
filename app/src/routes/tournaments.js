@@ -54,30 +54,34 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", verifyToken, async (req, res) => {
     // assuming date comes as: YYYY-MM-DD
     // todo: if (!req.body) {}
-    const { name, sport, maxTeams, date, teams } = req.body;
+    const { name, sport, maxTeams, date, addTeams, remTeams } = req.body;
 
     let result;
     const mongo = await db.connect();
 
-    // TO DO!!! NON FUNZIONA IL FILTRO UTENTE!!!
     const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
     let updateDocument = {};
 
     if (name || sport || maxTeams || date) {
-        updateDocument = { $set: {} };
+        updateDocument.$set = {};
         if (name) updateDocument.$set.name = name;
         if (sport) updateDocument.$set.sport = sport;
         if (maxTeams) updateDocument.$set.maxTeams = Number(maxTeams);
         if (date) updateDocument.$set.date = new Date(date);
     }
 
-    if (teams && Array.isArray(teams)) {
-        let teamsIds = teams.map(id => new ObjectId(id));
+    if (addTeams && Array.isArray(addTeams)) {
+        let teamsIds = addTeams.map(id => new ObjectId(id));
         updateDocument.$addToSet = { teamsIds: { $each: teamsIds } };
     }
 
+    if (remTeams && Array.isArray(remTeams)) {
+        let teamsIds = remTeams.map(id => new ObjectId(id));
+        updateDocument.$pull = { teamsIds: { $in: teamsIds } };
+    }
+
     if (Object.keys(updateDocument).length === 0) {
-        return res.status(400).send("No fields to update.");
+        return res.status(400).send("Empty fields.");
     }
 
     result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
@@ -125,7 +129,7 @@ router.get("/:id/matches", async (req, res) => {
     const tournament = await mongo.collection("tournaments").findOne(filter);
     if (!tournament) return res.status(404).send("Tournament not found");
     const matchesIds = tournament.matchesIds || [];
-    const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds.map(id => new ObjectId(id)) } }).toArray();
+    const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds } }).toArray();
     res.json(matches);
 });
 
@@ -135,7 +139,7 @@ router.get("/:id/standings", async (req, res) => {
         const mongo = await db.connect();
         const tournament = await mongo.collection("tournaments").findOne({ _id: new ObjectId(req.params.id) });
         if (!tournament) return res.status(404).send("Tournament not found");
-        const matchesIds = (tournament.matchesIds || []).map(id => new ObjectId(id));
+        const matchesIds = tournament.matchesIds || [];
         const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds } }).toArray();
 
         const teams = computePoints(matches, ...points[tournament.sport]);
