@@ -9,6 +9,7 @@ app.use("/api/fields", require("./routes/fields.js"));
 app.use("/api/tournaments", require("./routes/tournaments.js"));
 app.use("/api/matches", require("./routes/matches.js"));
 app.use("/api/users", require("./routes/users.js"));
+app.use("/api/teams", require("./routes/teams.js"));
 
 init().then(() => {
     app.listen(3000, () => {
