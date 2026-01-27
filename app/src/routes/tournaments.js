@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-const db = require("../db.js");
+const db = require("../config/db.js");
 const { ObjectId } = require("mongodb");
 let { verifyToken } = require("../modules/awt.js");
 
@@ -25,7 +25,7 @@ router.post("/", verifyToken, async (req, res) => {
         return res.status(400).send("Missing fields.");
     }
     const mongo = await db.connect();
-    const tournament = { name, sport, maxTeams, status: "active", date: new Date(date), creatorUserId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
+    const tournament = { name, sport, maxTeams, status: "active", date: new Date(date), organizerId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
     const result = await mongo.collection("tournaments").insertOne(tournament)
     res.status(201).json(result);
 })
@@ -84,7 +84,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 // cancel the tournament (creator only)
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
-    const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), creatorUserId: new ObjectId(req.user.id) })
+    const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) })
     if (result.deletedCount === 0) { return res.status(409).send("User not authorized or tournament not found.") };
     res.status(201).json(result);
 });

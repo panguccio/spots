@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db.js");
+const db = require("../config/db.js");
 let { verifyToken } = require("../modules/awt.js");
 const { ObjectId } = require("mongodb");
 const getLimitTimes = require("../utils/dates.js");

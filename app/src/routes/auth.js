@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const db = require("../db.js");
+const db = require("../config/db.js");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
