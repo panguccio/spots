@@ -80,6 +80,14 @@ router.put("/:id", verifyToken, async (req, res) => {
     res.status(204).json(result);
 });
 
+// cancel the team (id) (auth)
+router.delete("/:id", verifyToken, async (req, res) => {
+    const mongo = await db.connect();
+    const result = await mongo.collection("teams").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) });
+    if (result.deletedCount === 0) { return res.status(409).send("User is not organizer of this team (unauthorized).") };
+    res.status(201).json(result);
+});
+
 // list of players (id)
 router.get("/:id/players", async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id) };
