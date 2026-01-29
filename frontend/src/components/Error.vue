@@ -1,5 +1,8 @@
 <template>
-  <p v-if="error" class="error">{{ error.status }} - {{ error.message }}</p>
+  <p v-if="error" class="error">
+    <p><strong>Error {{ error.status }}</strong></p>
+    <p>{{ error.message }}</p>
+  </p>
 </template>
 
 <script setup>
@@ -10,7 +13,10 @@ defineProps({
 
 <style scoped>
 .error {
-  color: #ff5757;
+  color: white;
   margin-top: 12px;
+  background-color: #e94646b6;
+  padding: 10px;
+  border-radius: 4px;
 }
 </style>
