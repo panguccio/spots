@@ -7,16 +7,16 @@ import ErrorMessage from '@/components/Error.vue'
 const router = useRouter()
 const username = ref('')
 const password = ref('')
-const error = ref('')
+const error = ref(null)
 
 async function handleLogin() {
-  error.value = ''
+  error.value = null
   try {
     const token = await login(username.value, password.value)
     localStorage.setItem('token', token)
     router.push({ name: 'home' })
   } catch (err) {
-    error.value = err.message
+    error.value = err;
   }
 }
 </script>
@@ -36,7 +36,7 @@ async function handleLogin() {
         </div>
         <button type="submit">Login</button>
       </form>
-      <ErrorMessage :message="error" />
+      <ErrorMessage :error="error" />
     </div>
   </div>
 </template>

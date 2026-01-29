@@ -1,10 +1,10 @@
 <template>
-  <p v-if="message" class="error">{{ message }}</p>
+  <p v-if="error" class="error">{{ error.status }} - {{ error.message }}</p>
 </template>
 
 <script setup>
 defineProps({
-  message: String
+  error: Object
 })
 </script>
 
