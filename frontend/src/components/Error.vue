@@ -1,8 +1,8 @@
 <template>
-  <p v-if="error" class="error">
+  <div v-if="error" class="error">
     <p><strong>Error {{ error.status }}</strong></p>
     <p>{{ error.message }}</p>
-  </p>
+  </div>
 </template>
 
 <script setup>
