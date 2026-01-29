@@ -20,15 +20,15 @@ import SearchBar from '@/components/SearchBar.vue';
         <div class="features-grid">
           <article>
             <p>Find and book the perfect sports field for your next game or practice session.</p>
-            <img src="@/assets/field.jpg" alt="Sports Field">
+            <img src="@/assets/images/field.jpg" alt="Sports Field">
           </article>
           <article>
             <p>Discover local tournaments and join teams to compete and have fun.</p>
-          <img src="@/assets/tournament.png" alt="Tournament">
+          <img src="@/assets/images/tournament.png" alt="Tournament">
           </article>
           <article>
             <p>Connect with players in your area and build your own sports community.</p>
-            <img src="@/assets/players.jpg" alt="Players">
+            <img src="@/assets/images/players.jpg" alt="Players">
           </article>
         </div>
       </div>

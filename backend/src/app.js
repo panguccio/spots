@@ -3,6 +3,12 @@ let init = require("./config/init.js")
 const app = express();
 app.use(express.json());
 
+const cors = require('cors')
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
 
 app.use("/api/auth", require("./routes/auth.js"));
 app.use("/api/fields", require("./routes/fields.js"));

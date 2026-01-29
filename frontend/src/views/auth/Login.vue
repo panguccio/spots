@@ -1,12 +1,44 @@
+<script setup>
+import { ref } from 'vue'
+import { login } from '@/services/auth.js'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const username = ref('')
+const password = ref('')
+const error = ref('')
+
+async function handleLogin() {
+  error.value = ''
+  try {
+    const token = await login(username.value, password.value)
+    localStorage.setItem('token', token)
+    router.push({ name: 'home' })
+  } catch (err) {
+    error.value = err.message
+  }
+}
+</script>
+
 <template>
-  <div class="Login">
-    <h1>Login</h1>
+  <div class="auth-page">
+    <div class="login-form">
+      <h2>Login</h2>
+      <form @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" v-model="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" v-model="password" required />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p v-if="error" class="error">{{ error }}</p>
+    </div>
   </div>
 </template>
-
-<script setup>
-// TODO: implement Login
-</script>
 
 <style scoped>
 </style>

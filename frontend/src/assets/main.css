@@ -47,3 +47,7 @@ p {
   color: white;
   font-size: 18px;
 }
+
+.error {
+    color: red;
+}
