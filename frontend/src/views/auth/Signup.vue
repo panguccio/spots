@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { signup } from '@/services/auth.js'
 import { useRouter } from 'vue-router'
 import ErrorMessage from '@/components/Error.vue'
+import Button from '@/components/Button.vue'
+import Input from '@/components/Input.vue'
+import FormCard from '@/components/FormCard.vue'
 
 const router = useRouter()
 const name = ref('')
@@ -25,15 +28,16 @@ async function handleSignup() {
 
 <template>
   <div class="auth-page">
-    <div class="login-form">
-      <h2>Signup</h2>
-    <input v-model="name" placeholder="Name" />
-    <input v-model="surname" placeholder="Surname" />
-    <input v-model="username" placeholder="Username" />
-    <input v-model="password" placeholder="Password" type="password" />
-    <button @click="handleSignup">Signup</button>
-    <ErrorMessage :message="error" />
-    </div>
+    <FormCard title="Signup">
+    <form class="input" @submit.prevent="handleSignup">
+        <Input label="Name" v-model="name" />
+        <Input label="Surname" v-model="surname" />
+        <Input label="Username" v-model="username" />
+        <Input label="Password" type="password" v-model="password" />
+        <Button>Signup</Button>
+      </form>
+      <ErrorMessage :error="error" />
+    </FormCard>
   </div>
 </template>
 

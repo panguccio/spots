@@ -7,9 +7,9 @@ export function login(username, password) {
   })
 }
 
-export function signup(data) {
+export function signup(name, surname, username, password) {
   return apiFetch('/auth/signup', {
     method: 'POST',
-    body: JSON.stringify(data)
+    body: JSON.stringify({ name, surname, username, password })
   })
 }

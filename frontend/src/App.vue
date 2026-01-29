@@ -15,4 +15,6 @@ import Footer from "@/components/Footer.vue"
   min-height: 93vh;
 }
 
+
+
 </style>

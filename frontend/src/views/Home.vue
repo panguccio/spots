@@ -40,7 +40,6 @@ import SearchBar from '@/components/SearchBar.vue';
 
 .home {
   width: 100%;
-  background: linear-gradient(135deg, #1e3c2f, #265d37);
   height: 100%;
 }
 
@@ -57,12 +56,6 @@ import SearchBar from '@/components/SearchBar.vue';
   width: 100%;
   max-width: 900px;
   padding: 0 24px;
-}
-
-.subtitle {
-  color: #dcdcdc;
-  margin-bottom: 48px;
-  font-size: 18px;
 }
 
 .features {
