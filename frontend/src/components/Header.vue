@@ -106,14 +106,7 @@ nav {
   width: max-content
 }
 
-a {
-  color: white;
-  text-decoration: none;
-}
 
-a:hover {
-  text-decoration: underline;
-}
 
 .logo a {
   font-weight: 700;

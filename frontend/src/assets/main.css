@@ -57,3 +57,13 @@ p, label, button, input, .search-icon span {
 p, label {
   color: white;
 }
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #c2993e;
+  text-decoration: underline;
+}
