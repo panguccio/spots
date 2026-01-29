@@ -22,11 +22,11 @@ html, body {
     align-items: center;
     text-align: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1e3c2f, #265d37, rgba(255, 213, 0, 0.483));
+    background: linear-gradient(180deg, #1e3c2f, #265d37);
 }
 
 .subtitle {
-  color: #dcdcdc;
+  color: white;
   margin-bottom: 48px;
   font-size: 18px;
 }

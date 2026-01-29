@@ -1,5 +1,22 @@
 <script setup>
 import SearchBar from '@/components/SearchBar.vue';
+import { ref } from 'vue';
+
+const balls = ['futbol', 'volleyball', 'basketball'];
+
+const currentBall = ref(
+  balls[Math.floor(Math.random() * balls.length)]
+)
+
+let randomBall = function() {
+  let next
+  do {
+    next = balls[Math.floor(Math.random() * balls.length)]
+  } while (next === currentBall.value)
+
+  currentBall.value = next
+}
+
 </script>
 
 <template>
@@ -7,7 +24,8 @@ import SearchBar from '@/components/SearchBar.vue';
     <section class="hero">
 
       <div class="hero-content">
-        <h1>SPOTS</h1>
+
+        <h1>SP<font-awesome-icon class="hero-icon" :icon="currentBall" @mouseenter="randomBall"/>TS</h1>
         <p class="subtitle">You pick a sport, we book a spot.</p>
 
         <SearchBar />
@@ -43,13 +61,36 @@ import SearchBar from '@/components/SearchBar.vue';
   height: 100%;
 }
 
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, #000000e6);
+}
+
+
 .hero {
-  height: 50vh;
+  position: relative;
+  height: 60vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  background-image: url('@/assets/images/court.jpg');
+  background-size: 115%;
+  background-position: 60% center;
+  background-repeat: no-repeat;
+
+  overflow: hidden;
 }
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+
 
 .hero-content {
   text-align: center;
@@ -57,6 +98,17 @@ import SearchBar from '@/components/SearchBar.vue';
   max-width: 900px;
   padding: 0 24px;
 }
+
+.hero-icon {
+  color: white;
+  margin: 0;
+  font-size: 80px;
+  cursor: pointer;
+  transition: transform .2s ease, opacity .2s ease;
+  vertical-align: middle;
+  transform: translateY(-9px);
+}
+
 
 .features {
   display: flex;
@@ -86,7 +138,7 @@ import SearchBar from '@/components/SearchBar.vue';
 article {
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  border-bottom: #c2993e 7px solid;
   background-color: white;
   max-width: 400px;
 }
