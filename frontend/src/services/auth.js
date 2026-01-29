@@ -9,7 +9,7 @@ export let login = async function(username, password) {
 
     if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.message || "Failed to login.");
+        throw new Error(err || "Failed to login.");
     }
 
     return res.json(); // token
@@ -24,7 +24,7 @@ export let signup = async function(name, surname, username, password) {
 
     if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.message || "Failed to signup.");
+        throw new Error(err || "Failed to signup.");
     }
 
     return res.json();

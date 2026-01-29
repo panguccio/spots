@@ -25,6 +25,9 @@ router.post("/login", async (req, res) => {
 // register a new user (body)
 router.post("/signup", async (req, res) => {
     const { name, surname, username, password } = req.body;
+    if (!name || !surname || !username || !password) {
+        return res.status(409).send("Invalid credentials, choose other ones.");
+     }
 
     const mongo = await db.connect();
     const exists = await mongo.collection("users").findOne({ username });
