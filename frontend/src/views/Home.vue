@@ -69,6 +69,7 @@ import SearchBar from '@/components/SearchBar.vue';
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
 
 .features-content {
@@ -85,6 +86,8 @@ import SearchBar from '@/components/SearchBar.vue';
   margin-top: 48px;
   margin-right: 48px;
   margin-left: 48px;
+  justify-content: center;
+  align-items: center;
 }
 
 article {
@@ -92,6 +95,7 @@ article {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,.1);
   background-color: white;
+  max-width: 400px;
 }
 
 article p {
@@ -104,4 +108,14 @@ article img {
   height: 200px;
   object-fit: cover;
 }
+
+@media screen and (max-width: 1030px) {
+  .features-grid {
+     grid-template-columns: 1fr;
+     max-width: 400px; 
+     margin: 0 auto;
+     padding: 20px;
+  }
+}
+
 </style>

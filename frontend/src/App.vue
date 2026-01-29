@@ -6,11 +6,14 @@ import Footer from "@/components/Footer.vue"
 <template>
 
     <Header/>
-    <router-view />
+    <router-view class="content" />
     <Footer/>
 </template>
 
 <style scoped>
 
+.content {
+  min-height: 93vh;
+}
 
 </style>

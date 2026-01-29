@@ -19,6 +19,7 @@
     box-shadow: 0 -2px 4px rgba(0,0,0
 ,.1);
     max-height: 62px;
+    bottom: 0;
 }
 .footer-content {
     max-width: 1200px;
