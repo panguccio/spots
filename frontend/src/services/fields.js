@@ -1,7 +1,7 @@
 import { apiFetch } from './api'
 
 export function list(searchTerm = '') {
-  const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : ''
+  const query = searchTerm ? `?q=${encodeURIComponent(searchTerm)}` : ''
   return apiFetch(`/fields${query}`, { method: 'GET' })
 }
 
