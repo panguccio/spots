@@ -12,11 +12,11 @@ router.post("/login", async (req, res) => {
     const mongo = await db.connect();
     const user = await mongo.collection("users").findOne({ username });
     if (!user) {
-        return res.status(403).send("This username doesn't exist.");
+        return res.status(403).json({ message: "This username doesn't exist."});
     }
     const match = await bcrypt.compare(password, user.hash);
     if (!match) {
-        return res.status(403).send("Wrong password.");
+        return res.status(403).json({ message: "Wrong password."});
     }
     const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: "24h" });
     res.json({ token });
@@ -26,14 +26,14 @@ router.post("/login", async (req, res) => {
 router.post("/signup", async (req, res) => {
     const { name, surname, username, password } = req.body;
     if (!name || !surname || !username || !password) {
-        return res.status(409).send("Invalid credentials, choose other ones.");
+        return res.status(409).json({ message: "Invalid credentials, choose other ones."});
      }
 
     const mongo = await db.connect();
     const exists = await mongo.collection("users").findOne({ username });
 
     if (exists) {
-        return res.status(409).send("Username not available.");
+        return res.status(409).json({ message: "Username not available."});
     } else {
         const hash = await bcrypt.hash(password, saltRounds);
         const user = { name, surname, username, hash }

@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { login } from '@/services/auth.js'
 import { useRouter } from 'vue-router'
+import ErrorMessage from '@/components/Error.vue'
 
 const router = useRouter()
 const username = ref('')
@@ -35,7 +36,7 @@ async function handleLogin() {
         </div>
         <button type="submit">Login</button>
       </form>
-      <p v-if="error" class="error">{{ error }}</p>
+      <ErrorMessage :message="error" />
     </div>
   </div>
 </template>

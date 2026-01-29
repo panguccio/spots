@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { signup } from '@/services/auth.js'
 import { useRouter } from 'vue-router'
+import ErrorMessage from '@/components/Error.vue'
 
 const router = useRouter()
 const name = ref('')
@@ -17,7 +18,7 @@ async function handleSignup() {
     localStorage.setItem('token', token)
     router.push({ name: 'home' })
   } catch (err) {
-    error.value = err
+    error.value = err.message
   }
 }
 </script>
@@ -31,7 +32,7 @@ async function handleSignup() {
     <input v-model="username" placeholder="Username" />
     <input v-model="password" placeholder="Password" type="password" />
     <button @click="handleSignup">Signup</button>
-      <p v-if="error" class="error">{{ error }}</p>
+    <ErrorMessage :message="error" />
     </div>
   </div>
 </template>

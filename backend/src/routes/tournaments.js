@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 router.post("/", verifyToken, async (req, res) => {
     const { name, sport, maxTeams, date } = req.body;
     if (!name || !sport || !maxTeams || !date) {
-        return res.status(400).send("Missing fields.");
+        return res.status(400).json({ message: "Missing fields."});
     }
     const mongo = await db.connect();
     const tournament = { name, sport, maxTeams, status: "active", date: new Date(date), organizerId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
@@ -37,7 +37,7 @@ router.get("/:id", async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();
     tournament = await mongo.collection("tournaments").findOne(filter);
-    if (!tournament) { return res.status(404).send("Tournament not found."); }
+    if (!tournament) { return res.status(404).json({ message: "Tournament not found."}); }
     res.json(tournament);
 });
 
@@ -71,12 +71,12 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
 
     if (Object.keys(updateDocument).length === 0) {
-        return res.status(400).send("Empty fields.");
+        return res.status(400).json({ message: "Empty fields."});
     }
 
     result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
     if (result.matchedCount === 0) {
-        return res.status(404).send("User is not organizer of this tournament (unauthorized).");
+        return res.status(404).json({ message: "User is not organizer of this tournament (unauthorized)."});
     }
 
     res.status(201).json(result);
@@ -86,7 +86,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("tournaments").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) });
-    if (result.deletedCount === 0) { return res.status(409).send("User is not organizer of this tournament (unauthorized).") };
+    if (result.deletedCount === 0) { return res.status(409).json({ message: "User is not organizer of this tournament (unauthorized)."}) };
     await mongo.collection("matches").deleteMany({ tournamentId: new ObjectId(req.params.id) });
     res.status(201).json(result);
 });
@@ -96,13 +96,13 @@ router.post("/:id/matches/generate", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
     const tournament = await mongo.collection("tournaments").findOne(filter);
-    if (!tournament) return res.status(404).send("User is not organizer of this tournament (unauthorized).");
+    if (!tournament) return res.status(404).json({ message: "User is not organizer of this tournament (unauthorized)."});
     const matchesIds = tournament.matchesIds || [];
     
     
     const started = await mongo.collection("matches").findOne({ _id: { $in: matchesIds }, status: "played" });
     if (started) {
-        return res.status(404).send("Schedule generation failed because some matches are already played.");
+        return res.status(404).json({ message: "Schedule generation failed because some matches are already played."});
     } else {
         await mongo.collection("matches").deleteMany({ tournamentId: new ObjectId(req.params.id) });
     }
@@ -127,7 +127,7 @@ router.get("/:id/matches", async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();
     const tournament = await mongo.collection("tournaments").findOne(filter);
-    if (!tournament) return res.status(404).send("Tournament not found");
+    if (!tournament) return res.status(404).json({ message: "Tournament not found"});
     const matchesIds = tournament.matchesIds || [];
     const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds } }).toArray();
     res.json(matches);
@@ -138,7 +138,7 @@ router.get("/:id/standings", async (req, res) => {
     try {
         const mongo = await db.connect();
         const tournament = await mongo.collection("tournaments").findOne({ _id: new ObjectId(req.params.id) });
-        if (!tournament) return res.status(404).send("Tournament not found");
+        if (!tournament) return res.status(404).json({ message: "Tournament not found"});
         const matchesIds = tournament.matchesIds || [];
         const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds } }).toArray();
 
@@ -150,7 +150,7 @@ router.get("/:id/standings", async (req, res) => {
 
     } catch (error) {
         console.error(err);
-        res.status(500).send("Error in computing the standings.");
+        res.status(500).json({ message: "Error in computing the standings."});
     }
 });
 

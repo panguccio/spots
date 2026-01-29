@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 router.post("/", verifyToken, async (req, res) => {
     const { name } = req.body;
     if (!name) {
-        return res.status(400).send("Missing fields.");
+        return res.status(400).json({ message: "Missing fields."});
     }
     const mongo = await db.connect();
     const team = { name, organizerId: new ObjectId(req.user.id), playersIds: [] }
@@ -35,9 +35,9 @@ router.get("/:id", async (req, res) => {
         const filter = { _id: new ObjectId(req.params.id) };
         const mongo = await db.connect();
         team = await mongo.collection("teams").findOne(filter);
-        if (!team) { return res.status(404).send("Team not found."); }
+        if (!team) { return res.status(404).json({ message: "Team not found."}); }
     } catch (error) {
-        return res.status(400).send("Team not found or malformed ID.");
+        return res.status(400).json({ message: "Team not found or malformed ID."});
     }
     res.json(team);
 });
@@ -69,12 +69,12 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
 
     if (Object.keys(updateDocument).length === 0) {
-        return res.status(400).send("Empty fields.");
+        return res.status(400).json({ message: "Empty fields."});
     }
 
     result = await mongo.collection("teams").updateOne(filter, updateDocument);
     if (result.matchedCount === 0) {
-        return res.status(404).send("User not authorized (or invalid teams id).");
+        return res.status(404).json({ message: "User not authorized (or invalid teams id)."});
     }
 
     res.status(204).json(result);
@@ -84,7 +84,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("teams").deleteOne({ _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) });
-    if (result.deletedCount === 0) { return res.status(409).send("User is not organizer of this team (unauthorized).") };
+    if (result.deletedCount === 0) { return res.status(409).json({ message: "User is not organizer of this team (unauthorized)."}) };
     res.status(201).json(result);
 });
 
@@ -93,7 +93,7 @@ router.get("/:id/players", async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();
     const team = await mongo.collection("teams").findOne(filter);
-    if (!team) return res.status(404).send("Team not found");
+    if (!team) return res.status(404).json({ message: "Team not found"});
     const playersIds = team.playersIds || [];
     const players = await mongo.collection("players").find({ _id: { $in: playersIds } }).toArray();
     res.json(players);
