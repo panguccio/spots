@@ -26,9 +26,9 @@ onMounted(() => {
       </div>
 
       <div class="menu">
-        <RouterLink to="/fields">Campi</RouterLink>
+        <RouterLink to="/fields">Fields</RouterLink>
         <RouterLink to="/tournaments">Tournaments</RouterLink>
-        <RouterLink to="/teams">Squadre</RouterLink>
+        <RouterLink to="/teams">Teams</RouterLink>
       </div>
 
       <div class="left">

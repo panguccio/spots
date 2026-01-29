@@ -3,24 +3,50 @@ import SearchBar from '@/components/SearchBar.vue';
 </script>
 
 <template>
-  <section class="hero">
+  <div class="home">
+    <section class="hero">
 
-    <div class="hero-content">
-      <h1 class="title">SPOTS</h1>
-      <p class="subtitle">You pick a sport, we book a spot.</p>
+      <div class="hero-content">
+        <h1>SPOTS</h1>
+        <p class="subtitle">You pick a sport, we book a spot.</p>
 
-      <SearchBar />
+        <SearchBar />
 
-    </div>
-  </section>
+      </div>
+    </section>
+    <section class="features">
+      <div class="features-content">
+        <h2>Why choose Spots?</h2>
+        <div class="features-grid">
+          <article>
+            <p>Find and book the perfect sports field for your next game or practice session.</p>
+            <img src="@/assets/field.jpg" alt="Sports Field">
+          </article>
+          <article>
+            <p>Discover local tournaments and join teams to compete and have fun.</p>
+          <img src="@/assets/tournament.png" alt="Tournament">
+          </article>
+          <article>
+            <p>Connect with players in your area and build your own sports community.</p>
+            <img src="@/assets/players.jpg" alt="Players">
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <style scoped>
 
-.hero {
-  height: 70vh;
+.home {
   width: 100%;
   background: linear-gradient(135deg, #1e3c2f, #265d37);
+  height: 100%;
+}
+
+.hero {
+  height: 50vh;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,17 +59,49 @@ import SearchBar from '@/components/SearchBar.vue';
   padding: 0 24px;
 }
 
-.title {
-  font-size: 64px;
-  color: white;
-  margin-bottom: 12px;
-}
-
 .subtitle {
   color: #dcdcdc;
   margin-bottom: 48px;
   font-size: 18px;
 }
 
+.features {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.features-content {
+  max-width: 1200px;
+  width: 100%;
+  padding: 48px 24px;
+  margin: 0 auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+  margin-right: 48px;
+  margin-left: 48px;
+}
+
+article {
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  background-color: white;
+}
+
+article p {
+  color: #1e3c2f;
+  margin-bottom: 16px;
+}
+
+article img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
 </style>
