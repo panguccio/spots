@@ -9,7 +9,7 @@ router.get("/:id", async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();
     match = await mongo.collection("matches").findOne(filter);
-    if (!match) { return res.status(404).json({ message: "Match not found."}); }
+    if (!match) { return res.status(404).json({ message: "Failed to get match: Id doesn't exist."}); }
     res.json(match);
 });
 
@@ -18,7 +18,7 @@ router.put("/:id/result", async (req, res) => {
     const { points1, points2 } = req.body;
 
     if (points1 == undefined || points2 == undefined) {
-        return res.status(400).json({ message: "Missing points."});
+        return res.status(400).json({ message: "Failed to compute match results: Missing points."});
     }
     const filter = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();

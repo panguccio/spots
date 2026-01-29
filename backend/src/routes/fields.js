@@ -21,14 +21,10 @@ router.get("/", async (req, res) => {
 // field details (id)
 router.get("/:id", async (req, res) => {
     let field;
-    try {
-        const filter = { _id: new ObjectId(req.params.id) };
-        const mongo = await db.connect();
-        field = await mongo.collection("fields").findOne(filter);
-        if (!field) { return res.status(404).json({ message: "Field not found."}); }
-    } catch (error) {
-        return res.status(400).json({ message: "Field not found."});
-    }
+    const filter = { _id: new ObjectId(req.params.id) };
+    const mongo = await db.connect();
+    field = await mongo.collection("fields").findOne(filter);
+    if (!field) { return res.status(404).json({ message: "Failed to get field: Id doesn't exist."}); }
     res.json(field);
 });
 
@@ -70,15 +66,15 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
     const { end, start } = getLimitTimes(date, startHour, endHour);
 
     if (start < new Date()) {
-        return res.status(409).json({ message: "Can't book past slots."});
+        return res.status(409).json({ message: "Failed to book field: Can't book past slots."});
     }
 
     if (+end === +start) {
-        return res.status(409).json({ message: "Slot can't be 0 length."});
+        return res.status(409).json({ message: "Failed to book field: Slot can't be 0 length."});
     }
 
     if (end < start) {
-        return res.status(409).json({ message: "End time must be after start time."});
+        return res.status(409).json({ message: "Failed to book field: End time must be after start time."});
     }
 
     const mongo = await db.connect();
@@ -87,7 +83,7 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
     const conflict = await mongo.collection("bookings").findOne(filter);
 
     if (conflict) {
-        return res.status(409).json({ message: "Slot not available."});
+        return res.status(409).json({ message: "Failed to book field: Slot not available."});
     }
 
     const booking = { userId: new ObjectId(req.user.id), fieldId: new ObjectId(req.params.id), start, end }
@@ -100,7 +96,7 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
 router.delete("/fields/:id/bookings/:bookingId", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("bookings").deleteOne({ _id: new ObjectId(req.params.bookingId), userId: new ObjectId(req.user.id) })
-    if (result.deletedCount === 0) { return res.status(409).json({ message: "User not authorized or tournament not found."}) };
+    if (result.deletedCount === 0) { return res.status(409).json({ message: "Failed to cancel field booking: User not authorized or tournament not found."}) };
     res.status(201).json(result);
 });
 

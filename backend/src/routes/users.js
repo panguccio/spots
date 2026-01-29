@@ -29,7 +29,7 @@ router.get("/whoami", verifyToken, async (req, res) => {
     const match = { _id: new ObjectId(req.user.id) };
     const mongo = await db.connect();
     user = (await mongo.collection("users").aggregate(pipeline(match)).toArray())[0];
-    if (!user) { return res.status(404).json({ message: "User not found."}); }
+    if (!user) { return res.status(404).json({ message: "Failed to get profile: User not found."}); }
     res.json(user);
 })
 
@@ -39,7 +39,7 @@ router.get("/:id", async (req, res) => {
     const match = { _id: new ObjectId(req.params.id) };
     const mongo = await db.connect();
     user = (await mongo.collection("users").aggregate(pipeline(match)).toArray())[0];
-    if (!user) { return res.status(404).json({ message: "User not found."}); }
+    if (!user) { return res.status(404).json({ message: "Failed to get user: User not found."}); }
     res.json(user);
 });
 
