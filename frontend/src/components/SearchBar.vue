@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 
-
 const { width } = useWindowSize()
 
 const placeholder = computed(() =>
