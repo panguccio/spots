@@ -1,3 +1,9 @@
+<script setup>
+defineProps({
+  title: String
+})
+</script>
+
 <template>
   <div class="form-card">
     <h2 v-if="title">{{ title }}</h2>
@@ -5,12 +11,6 @@
     <slot />
   </div>
 </template>
-
-<script setup>
-defineProps({
-  title: String
-})
-</script>
 
 <style scoped>
 
