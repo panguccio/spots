@@ -1,21 +1,20 @@
 <script setup>
 defineProps({
-  item: Object,
-  title: String,
+  name: String,
   info: String,
   icon: String
 })
-import { getIcon } from '@/assets/icons.js';
+
 </script>
 
 <template>
   <div class="list-element">
     <div class="box">
-      <font-awesome-icon class="icon" :icon="getIcon(icon)"/>
+      <font-awesome-icon class="icon" :icon="icon"/>
     </div>
     <div class="info">
-      <h3>{{ item[title] }}</h3>
-      <p>{{ item[info] }}</p>
+      <h3>{{ name }}</h3>
+      <p>{{ info }}</p>
     </div>
   </div>
 </template>
@@ -30,6 +29,7 @@ import { getIcon } from '@/assets/icons.js';
   height: 48px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
+  flex: 0 0 48px;
 }
 
 .list-element {
@@ -38,7 +38,6 @@ import { getIcon } from '@/assets/icons.js';
   background: rgba(255,255,255,0.05);
   border-radius: 12px;
   padding: 12px 16px;
-  gap: 16px;
   transition: background 0.2s;
   cursor: pointer;
 }
@@ -50,6 +49,11 @@ import { getIcon } from '@/assets/icons.js';
 .icon {
   width: 30px;
   height: 30px;
+}
+
+.info {
+  width: 100%;
+  justify-content: left;
 }
 
 .info h3 {

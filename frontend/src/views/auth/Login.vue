@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { login } from '@/services/auth.js'
 import { useRouter } from 'vue-router'
-import ErrorMessage from '@/components/Error.vue'
+import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
 import Input from '@/components/Input.vue'
 import FormCard from '@/components/FormCard.vue'
@@ -32,7 +32,7 @@ async function handleLogin() {
         <Input label="Password" type="password" v-model="password" />
         <Button>Login</Button>
       </form>
-      <ErrorMessage :error="error" />
+      <Error :error="error" />
     </FormCard>
   </div>
 </template>

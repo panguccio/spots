@@ -6,6 +6,8 @@ defineProps({
     default: "Search"
   }
 })
+
+const model = defineModel()
 </script>
 
 <template>
@@ -14,8 +16,9 @@ defineProps({
           <span class="material-symbols-outlined search-icon">search</span>
           <input
             class="search-input"
-            type="search"
+            type="text"
             :placeholder="placeholder"
+            v-model="model"
           />
         </div>
       </form>

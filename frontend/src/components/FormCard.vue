@@ -22,8 +22,8 @@ form.input {
   
 }
 .form-card {
-  background-color: #265d37; /* leggermente risaltato */
-  backdrop-filter: blur(10px); /* effetto sfocato se vuoi */
+  background-color: #265d37; 
+  backdrop-filter: blur(10px); 
   padding: 32px;
   border-radius: 16px;
   max-width: 450px;
