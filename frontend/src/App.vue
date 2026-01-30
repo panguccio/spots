@@ -5,16 +5,15 @@ import Footer from "@/components/Footer.vue"
 
 <template>
     <Header/>
-    <router-view class="content" />
+    <div class="content"><router-view /></div>
     <Footer/>
 </template>
 
 <style scoped>
 
 .content {
-  min-height: 93vh;
+  flex: 1;
+  width: 100%;
 }
-
-
 
 </style>
