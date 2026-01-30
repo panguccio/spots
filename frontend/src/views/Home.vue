@@ -1,6 +1,16 @@
 <script setup>
 import SearchBar from '@/components/SearchBar.vue';
 import { ref } from 'vue';
+import { computed } from 'vue'
+import { useWindowSize } from '@vueuse/core'
+
+const { width } = useWindowSize()
+
+const placeholder = computed(() =>
+  width.value < 466
+    ? "Search"
+    : "Search fields, tournaments, teams, players..."
+)
 
 const balls = ['futbol', 'volleyball', 'basketball'];
 
@@ -17,6 +27,7 @@ let randomBall = function() {
   currentBall.value = next
 }
 
+
 </script>
 
 <template>
@@ -28,7 +39,7 @@ let randomBall = function() {
         <h1>SP<font-awesome-icon class="hero-icon" :icon="currentBall" @mouseenter="randomBall"/>TS</h1>
         <p class="subtitle">You pick a sport, we book a spot.</p>
 
-        <SearchBar />
+        <SearchBar :placeholder/>
 
       </div>
     </section>

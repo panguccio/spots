@@ -1,14 +1,11 @@
 <script setup>
-import { computed } from 'vue'
-import { useWindowSize } from '@vueuse/core'
 
-const { width } = useWindowSize()
-
-const placeholder = computed(() =>
-  width.value < 466
-    ? "Search"
-    : "Search fields, tournaments, teams, players..."
-)
+defineProps({
+  placeholder: {
+    type: String,
+    default: "Search"
+  }
+})
 </script>
 
 <template>

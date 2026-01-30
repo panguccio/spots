@@ -33,7 +33,7 @@ function handleSearch(term) {
 <template>
   <div class="fields-page">
     <h1>Fields</h1>
-    <SearchBar v-model="searchTerm" @search="handleSearch" placeholder="Search fields..." />
+    <SearchBar v-model="searchTerm" @search="handleSearch" placeholder="Search fields" />
 
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
@@ -44,7 +44,7 @@ function handleSearch(term) {
         :item="field"
         title="name"
         info="address"
-        icon="sport"
+        :icon="field.sport"
       />
     </ul>
   </div>

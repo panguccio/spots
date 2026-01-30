@@ -58,7 +58,7 @@ onMounted(() => {
     </nav>
     <div v-else class="search-overlay" @click.self="searching = false">
         <div class="search-wrapper">
-          <SearchBar />
+          <SearchBar placeholder="Search anything"/>
         </div>
   </div>
   </div>
