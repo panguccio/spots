@@ -30,18 +30,18 @@ router.get("/:id", async (req, res) => {
 
 // availability for a specific date (id) (query)
 router.get("/:id/slots", async (req, res) => {
-    const date = req.query.date;
-    const { startDay, endDay } = getLimitTimes(date, "9:00", "22:00");
+    const date = req.query.q;
+    const { start, end } = getLimitTimes(date, "8:00", "21:00");
 
     const mongo = await db.connect();
     const filter = {
         fieldId: new ObjectId(req.params.id),
-        start: { $gte: startDay, $lt: endDay }
+        start: { $gte: start, $lt: end }
     };
     const bookings = await mongo.collection("bookings").find(filter).sort({ start: 1 }).toArray();
 
     let availableSlots = [];
-    let left = startDay;
+    let left = start;
 
     for (const booking of bookings) {
         if (booking.start > left) {
@@ -50,8 +50,8 @@ router.get("/:id/slots", async (req, res) => {
         left = booking.end > left ? booking.end : left; // in teoria se non ci sono intersezioni è sempre booking.end
     }
 
-    if (left < endDay) {
-        availableSlots.push({ start: left, end: endDay });
+    if (left < end) {
+        availableSlots.push({ start: left, end: end });
     }
 
     res.json(availableSlots);

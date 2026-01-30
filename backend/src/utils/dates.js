@@ -7,6 +7,7 @@ function getLimitTimes(date, startHour, endHour) {
 
     start.setUTCHours(sh, sm, 0, 0);
     end.setUTCHours(eh, em, 0, 0);
+    
     return { end, start };
 }
 
