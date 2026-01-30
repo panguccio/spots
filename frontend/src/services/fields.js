@@ -10,8 +10,9 @@ export function details(id) {
   return apiFetch(`/${name}/${id}`, { method: 'GET' })
 }
 
-export function slots(id) {
-  return apiFetch(`/${name}/${id}/slots`, { method: 'GET' })
+export function slots(id, date) {
+  const query = date ? `?q=${encodeURIComponent(date)}` : ''
+  return apiFetch(`/${name}/${id}/slots${query}`, { method: 'GET' })
 }
 
 export function book(id, date, startHour, endHour) {
