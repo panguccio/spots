@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="list-element">
+  <div class="list-element" @click="$emit('click')">
     <div class="box">
       <font-awesome-icon class="icon" :icon="icon"/>
     </div>

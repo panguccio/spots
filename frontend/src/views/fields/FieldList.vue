@@ -1,6 +1,12 @@
 <script setup>
 import { list } from '@/services/fields.js'
 import List from '@/components/List.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+let openField = function(field) {
+    router.push(`/fields/${field._id}`)
+}
 
 </script>
 
@@ -10,7 +16,8 @@ import List from '@/components/List.vue'
         :name="element => element.name" 
         search="Search fields" 
         :info="element => element.address" 
-        :icon="element => element.sport === 'football' ? 'futbol' : element.sport"  />
+        :icon="element => element.sport === 'football' ? 'futbol' : element.sport"  
+        @click="openField"/>
 
 </template>
 

@@ -3,9 +3,7 @@ import { ref, onMounted } from 'vue'
 import { watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import ListElement from '@/components/ListElement.vue'
-import { getIcon } from '@/assets/icons.js';
 import Error from '@/components/Error.vue'
-import { timestamp } from '@vueuse/core';
 
 const elementlist = ref([])
 const searchTerm = ref('')
@@ -17,8 +15,10 @@ const props = defineProps({
     search: String,
     name: Function,
     info: Function,
-    icon: Function
+    icon: Function,
 })
+
+const emit = defineEmits(['click'])
 
 async function fetch(term = '') {
   error.value = null
@@ -45,8 +45,8 @@ watch(searchTerm, (newTerm) => {
       <SearchBar v-model="searchTerm" :placeholder="search" />
       <Error v-if="error" :error="error"/>
       <ul class="list">
-        <ListElement v-for="element in elementlist" :key="element.id" :name="name(element)" :info="info(element)"
-          :icon="icon(element)" />
+        <ListElement v-for="element in elementlist" :key="element._id" :name="name(element)" :info="info(element)" :icon="icon(element)" 
+          @click="$emit('click', element)"/>
       </ul>
     </div>
   </div>
