@@ -2,17 +2,20 @@
 import { onMounted, ref } from 'vue'
 import { details, matches, standings } from '@/services/tournaments.js'
 import { details as teamDetails } from '@/services/teams.js'
+import { details as userDetails } from '@/services/users.js'
 import { useRoute } from 'vue-router'
 
 import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
 
+let loading = ref(true)
 const tournamentId = useRoute().params.id
 const tournament = ref({})
 const schedule = ref([])
 const standingsData = ref({})
 const error = ref(null)
 const teamsInfo = ref({});
+const user = ref('')
 
 
 async function getDetails() {
@@ -59,45 +62,67 @@ async function getNames() {
   }
 }
 
-onMounted(async () => { await getDetails(), await getStandings(), await getNames(), getMatches() })
+async function getUserName() {
+  const id = tournament.value.organizerId;
+  try {
+    user.value = await userDetails(id);
+  } catch (err) {
+    error.value = err;
+  }
+}
+
+async function loadPage() {
+  loading.value = true;
+  await getDetails(); 
+  await getStandings(); 
+  await getNames(); 
+  await getMatches(); 
+  await getUserName();
+  loading.value = false;
+}
+
+onMounted( async () => { await loadPage() })
 
 </script>
 
 <template>
-  <div class="tournament-content">
+  <div class="tournament-content" >
 
     <div class="element-card">
       <h2>Tournament Details</h2>
       <hr />
-      <div class="element">
+      <article v-if="!loading">
+      <section class="element">
         <h3>{{ tournament.name }}</h3>
         <div class="info">
           <p><strong>sport:</strong> {{ tournament.sport }}</p>
           <p><strong>status:</strong> {{ tournament.status }}</p>
-          <p><strong>date:</strong> {{ tournament.date.split('T')[0] }}</p>
-          <p><strong>organizer:</strong> {{ tournament.organizerId }}</p>
+          <p><strong>date:</strong> {{ tournament.date.split('T')[0] }} </p> 
+          <p><strong>organizer:</strong> {{ user.name }} {{ user.surname }}</p>
         </div>
-      </div>
-      <div class="matches">
+      </section>
+      <section class="matches">
         <h4>Matches Schedule</h4>
         <div v-for="match in schedule" :key="match._id" class="match">
           {{ teamsInfo[match.team1Id].name }} vs {{ teamsInfo[match.team2Id].name }} - {{ match.date.split('T')[0] }} -
           status:
           {{ match.status }} - points: {{ match.points1 }} - {{ match.points2 }}
         </div>
-      </div>
-      <div class="schedule">
+      </section>
+      <section class="schedule">
         <h4>Standings</h4>
         <div v-for="team in standingsData.standings" :key="team" class="picker">
           {{ teamsInfo[team].name }} - played: {{ teamsInfo[team].played }} - scored: {{ teamsInfo[team].scored }} -
-          conceded: {{ teamsInfo[team].conceded }} - points: {{ teamsInfo[team].points }} - diff: {{
-            teamsInfo[team].diff }}
+          conceded: {{ teamsInfo[team].conceded }} - points: {{ teamsInfo[team].points }} - diff: {{ teamsInfo[team].diff }}
         </div>
-      </div>
+      </section>
+      </article>
+      <div v-else><p>Loading data...</p></div>
     </div>
 
     <Error v-if="error" :error="error" />
   </div>
+  
 </template>
 
 <style scoped>
