@@ -1,8 +1,7 @@
 <script setup>
 import { list } from '@/services/fields.js'
 import List from '@/components/List.vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import router from '@/router'
 
 let openField = function(field) {
     router.push(`/fields/${field._id}`)

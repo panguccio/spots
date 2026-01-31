@@ -1,8 +1,7 @@
 const API_URL = 'http://localhost:3000/api'
 
 import { useAuthStore } from '@/store/auth.js'
-import { useRouter } from 'vue-router'
-const router = useRouter();
+import router from '@/router'
 
 async function handleResponse(res) {
   if (!res.ok) {

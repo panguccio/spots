@@ -1,8 +1,7 @@
 <script setup>
 import { list } from '@/services/tournaments.js'
 import List from '@/components/List.vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import router from '@/router'
 
 let openTournament = function(tournament) {
     router.push(`/tournaments/${tournament._id}`)

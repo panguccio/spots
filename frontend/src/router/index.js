@@ -20,17 +20,13 @@ import TeamList from "@/views/teams/TeamList.vue"
 import TeamNew from "@/views/teams/TeamNew.vue"
 import Team from "@/views/teams/Team.vue"
 import TeamEdit from "@/views/teams/TeamEdit.vue"
-import TeamPlayers from "@/views/teams/TeamPlayers.vue"
 
 // tournaments
 import TournamentList from "@/views/tournaments/TournamentList.vue"
 import TournamentNew from "@/views/tournaments/TournamentNew.vue"
 import Tournament from "@/views/tournaments/Tournament.vue"
 import TournamentEdit from "@/views/tournaments/TournamentEdit.vue"
-import TournamentSchedule from "@/views/tournaments/TournamentSchedule.vue"
-import TournamentStandings from "@/views/tournaments/TournamentStandings.vue"
-import Match from "@/views/matches/Match.vue"
-import MatchResult from "@/views/matches/MatchResult.vue"
+import MatchEdit from "@/views/tournaments/MatchEdit.vue"
 
 
 
@@ -39,25 +35,24 @@ const routes = [
 
   { path: "/login", name: "login", component: Login},
   { path: "/signup", name: "signup", component: Signup},
-  { path: "/users", name: "userlist", component: UserList},
+  { path: "/users", name: "users", component: UserList},
   { path: "/whoami", name: "profile", component: Profile},
   { path: "/users/:id", name: "user", component: User},
 
-  { path: "/fields", name: "fieldlist", component: FieldList},
+  { path: "/fields", name: "fields", component: FieldList},
   { path: "/fields/:id", name: "field", component: Field},
 
   { path: "/players", name: "playerlist", component: PlayerList},
-  { path: "/teams", name: "teamlist", component: TeamList},
+  { path: "/teams", name: "teams", component: TeamList},
   { path: "/teams/new", name: "teamnew", component: TeamNew},
   { path: "/teams/:id", name: "team", component: Team},
   { path: "/teams/:id/edit", name: "teamedit", component: TeamEdit},
   
-  { path: "/tournaments", name: "tournamentlist", component: TournamentList},
+  { path: "/tournaments", name: "tournaments", component: TournamentList},
   { path: "/tournaments/new", name: "tournamentnew", component: TournamentNew},
   { path: "/tournaments/:id", name: "tournament", component: Tournament},
   { path: "/tournaments/:id/edit", name: "tournamentedit", component: TournamentEdit},
-  { path: "/matches/:id", name: "match", component: Match},
-  { path: "/matches/:id/result", name: "matchresult", component: MatchResult},
+  { path: "/matches/:id", name: "match", component: MatchEdit},
 ];
 
 const router = createRouter({

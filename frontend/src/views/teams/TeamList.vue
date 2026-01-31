@@ -1,8 +1,7 @@
 <script setup>
 import { list } from '@/services/teams.js'
 import List from '@/components/List.vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import router from '@/router'
 
 let openTeam = function(team) {
     router.push(`/teams/${team._id}`)

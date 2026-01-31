@@ -1,15 +1,14 @@
 <script setup>
 import { ref } from "vue";
 import { signup } from "@/services/auth.js";
-import { useRouter } from "vue-router";
-import ErrorMessage from "@/components/Error.vue";
+import router from '@/router'
+import Error from "@/components/Error.vue";
 import Button from "@/components/Button.vue";
 import Input from "@/components/Input.vue";
 import FormCard from "@/components/FormCard.vue";
 import { useAuthStore } from "@/store/auth.js";
 const { setAuth } = useAuthStore();
 
-const router = useRouter();
 const name = ref("");
 const surname = ref("");
 const username = ref("");
@@ -38,7 +37,7 @@ async function handleSignup() {
         <Input label="Password" type="password" v-model="password" />
         <Button>Signup</Button>
       </form>
-      <ErrorMessage :error="error" />
+      <Error v-if="error" :error="error" />
     </FormCard>
   </div>
 </template>

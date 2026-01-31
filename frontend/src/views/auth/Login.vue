@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { login } from "@/services/auth.js";
-import { useRouter } from "vue-router";
+import router from '@/router'
 import Error from "@/components/Error.vue";
 import Button from "@/components/Button.vue";
 import Input from "@/components/Input.vue";
@@ -9,7 +9,6 @@ import FormCard from "@/components/FormCard.vue";
 import { useAuthStore } from "@/store/auth.js";
 const { setAuth } = useAuthStore();
 
-const router = useRouter();
 const username = ref("");
 const password = ref("");
 const error = ref(null);
@@ -33,7 +32,7 @@ async function handleLogin() {
         <Input label="Password" type="password" v-model="password" />
         <Button>Login</Button>
       </form>
-      <Error :error="error" />
+      <Error v-if="error" :error="error" />
     </FormCard>
   </div>
 </template>

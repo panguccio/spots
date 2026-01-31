@@ -25,22 +25,22 @@ onMounted(() => {
       </div>
 
       <div class="logo">
-        <RouterLink to="/">Spots</RouterLink>
+        <RouterLink :to="{name: 'home'}">Spots</RouterLink>
       </div>
 
       <div class="menu">
-        <RouterLink to="/fields">Fields</RouterLink>
-        <RouterLink to="/tournaments">Tournaments</RouterLink>
-        <RouterLink to="/teams">Teams</RouterLink>
+        <RouterLink :to="{name: 'fields'}">Fields</RouterLink>
+        <RouterLink :to="{name: 'tournaments'}">Tournaments</RouterLink>
+        <RouterLink :to="{name: 'teams'}">Teams</RouterLink>
       </div>
 
       <div class="left">
         <div v-if="!user" class="auth">
-          <RouterLink to="/login">Login</RouterLink>
-          <RouterLink to="/signup">Signup</RouterLink>
+          <RouterLink :to="{name: 'login'}">Login</RouterLink>
+          <RouterLink :to="{name: 'signup'}">Signup</RouterLink>
         </div>
         <div v-else class="auth">
-        <RouterLink to="/whoami">{{ user }}</RouterLink>
+        <RouterLink :to="{name: 'profile'}">{{ user }}</RouterLink>
         </div>
 
 
@@ -52,14 +52,14 @@ onMounted(() => {
 
       <div v-if="open" class="mobile-menu">
 
-        <RouterLink to="/fields">Campi</RouterLink>
-        <RouterLink to="/tournaments">Tournaments</RouterLink>
-        <RouterLink to="/teams">Squadre</RouterLink>
+        <RouterLink :to="{name: 'fields'}">Fields</RouterLink>
+        <RouterLink :to="{name: 'tournaments'}">Tournaments</RouterLink>
+        <RouterLink :to="{name: 'teams'}">Teams</RouterLink>
 
         <hr />
 
-        <RouterLink to="/login">Login</RouterLink>
-        <RouterLink to="/signup">Signup</RouterLink>
+        <RouterLink :to="{name: 'login'}">Login</RouterLink>
+        <RouterLink :to="{name: 'signup'}">Signup</RouterLink>
 
       </div>
     </nav>
