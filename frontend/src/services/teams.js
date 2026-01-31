@@ -29,7 +29,7 @@ export function cancel(id) {
 }
 
 
-export function players() {
+export function players(id) {
     return apiFetch(`/${name}/${id}/players`, { method: 'GET' })
 }
 
