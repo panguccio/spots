@@ -141,11 +141,11 @@ router.get("/:id/standings", async (req, res) => {
     const matchesIds = tournament.matchesIds || [];
     const matches = await mongo.collection("matches").find({ _id: { $in: matchesIds } }).toArray();
 
-    const teams = computePoints(matches, ...points[tournament.sport]);
-    let standings = [];
-    for (const team in teams) standings.push(team);
-    standings.sort((a,b) => (teams[b].points - teams[a].points || teams[b].diff - teams[a].diff || teams[b].scored - teams[a].scored));
-    res.json({teams, standings});
+    const teamsStats = computePoints(matches, ...points[tournament.sport]);
+    const standings = Object.entries(teamsStats).map(([id, stats]) => ({id, ...stats}));
+    standings.sort((a,b) => (b.points - a.points || b.diff - a.diff || b.scored - a.scored));
+    
+    res.json( standings );
 });
 
 module.exports = router;
