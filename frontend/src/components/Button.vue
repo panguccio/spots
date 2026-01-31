@@ -1,13 +1,3 @@
-<template>
-  <button
-    class="btn"
-    :class="variant"
-    :disabled="disabled"
-  >
-    <slot />
-  </button>
-</template>
-
 <script setup>
 defineProps({
   variant: {
@@ -21,6 +11,16 @@ defineProps({
 })
 </script>
 
+<template>
+  <button
+    class="btn"
+    :class="variant"
+    :disabled="disabled"
+  >
+    <slot />
+  </button>
+</template>
+
 <style scoped>
 .btn {
   padding: 10px 20px;
@@ -30,6 +30,8 @@ defineProps({
   cursor: pointer;
   transition: all .2s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  max-width: fit-content;
+  margin: auto;
 }
 
 /* PRIMARY */
