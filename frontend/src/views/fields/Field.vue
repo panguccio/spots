@@ -16,20 +16,19 @@ const selectedDate = ref(today);
 const selectedStartTime = ref("09:00");
 const selectedEndTime = ref("22:00");
 
-
-async function getSlots(date = today) {
+async function getDetails() {
   error.value = null
   try {
-    freeSlots.value = await slots(fieldId, date)
+    field.value = await details(fieldId)
   } catch (err) {
     error.value = err;
   }
 }
 
-async function getDetails() {
+async function getSlots(date = today) {
   error.value = null
   try {
-    field.value = await details(fieldId)
+    freeSlots.value = await slots(fieldId, date)
   } catch (err) {
     error.value = err;
   }
