@@ -7,10 +7,10 @@ export function list(searchTerm = '') {
 }
 
 export function create(name) {
-    return apiFetch(`/${name}`), {
+    return apiFetch(`/${name}`, {
         method: 'POST',
         body: JSON.stringify({ name })
-    }
+    })
 }
 
 export function details(id) {
@@ -18,10 +18,10 @@ export function details(id) {
 }
 
 export function edit(name, addPlayers, remPlayers) {
-    return apiFetch(`/${name}/${id}`), {
+    return apiFetch(`/${name}/${id}`, {
         method: 'PUT',
         body: JSON.stringify({ name, sport, maxTeams, date, addTeams, remTeams })
-    }
+    })
 }
 
 export function cancel(id) {
