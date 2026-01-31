@@ -4,7 +4,6 @@ const db = require("./db")
 async function init() {
     try {
         const mongo = await db.connect();
-        await mongo.collection("tournaments").createIndex({ organizerId: 1 });
         console.log("  * DB init completed");
     } catch (err) {
         console.error("  * DB init failed");
