@@ -50,15 +50,12 @@ const routes = [
   { path: "/teams", name: "teamlist", component: TeamList},
   { path: "/teams/new", name: "teamnew", component: TeamNew},
   { path: "/teams/:id", name: "team", component: Team},
-  { path: "/teams/:id/edit", name: "teamedit", component: TeamEdit}, // also for deleting it
-  { path: "/teams/:id/players", name: "teamplayers", component: TeamPlayers},
+  { path: "/teams/:id/edit", name: "teamedit", component: TeamEdit},
   
   { path: "/tournaments", name: "tournamentlist", component: TournamentList},
   { path: "/tournaments/new", name: "tournamentnew", component: TournamentNew},
   { path: "/tournaments/:id", name: "tournament", component: Tournament},
-  { path: "/tournaments/:id/edit", name: "tournamentedit", component: TournamentEdit}, // also for deleting it
-  { path: "/tournaments/:id/schedule", name: "tournamentschedule", component: TournamentSchedule}, // if organizer, can generate it, if not can only see it
-  { path: "/tournaments/:id/standings", name: "touramentstandings", component: TournamentStandings},
+  { path: "/tournaments/:id/edit", name: "tournamentedit", component: TournamentEdit},
   { path: "/matches/:id", name: "match", component: Match},
   { path: "/matches/:id/result", name: "matchresult", component: MatchResult},
 ];
