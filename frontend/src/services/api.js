@@ -1,5 +1,9 @@
 const API_URL = 'http://localhost:3000/api'
 
+import { useAuthStore } from '@/store/auth.js'
+import { useRouter } from 'vue-router'
+const router = useRouter();
+
 async function handleResponse(res) {
   if (!res.ok) {
     let data
@@ -8,6 +12,12 @@ async function handleResponse(res) {
       data = await res.json()
     } catch {
       data = { message: res.statusText }
+    }
+
+    if (res.status === 401) {
+      const {logout} = useAuthStore()
+      logout();
+      router.push({ name: "login" })
     }
 
     const err = new Error(data.message || 'Request failed')

@@ -1,27 +1,29 @@
 <script setup>
-import { ref } from 'vue'
-import { signup } from '@/services/auth.js'
-import { useRouter } from 'vue-router'
-import ErrorMessage from '@/components/Error.vue'
-import Button from '@/components/Button.vue'
-import Input from '@/components/Input.vue'
-import FormCard from '@/components/FormCard.vue'
+import { ref } from "vue";
+import { signup } from "@/services/auth.js";
+import { useRouter } from "vue-router";
+import ErrorMessage from "@/components/Error.vue";
+import Button from "@/components/Button.vue";
+import Input from "@/components/Input.vue";
+import FormCard from "@/components/FormCard.vue";
+import { useAuthStore } from "@/store/auth.js";
+const { setAuth } = useAuthStore();
 
-const router = useRouter()
-const name = ref('')
-const surname = ref('')
-const username = ref('')
-const password = ref('')
-const error = ref('')
+const router = useRouter();
+const name = ref("");
+const surname = ref("");
+const username = ref("");
+const password = ref("");
+const error = ref("");
 
 async function handleSignup() {
-  error.value = ''
+  error.value = "";
   try {
-    const token = await signup(name.value, surname.value, username.value, password.value)
-    localStorage.setItem('token', token)
-    router.push({ name: 'home' })
+    const token = await signup(name.value, surname.value, username.value, password.value);
+    setAuth(username.value, res.token);
+    router.push({ name: "profile" });
   } catch (err) {
-    error.value = err.message
+    error.value = err.message;
   }
 }
 </script>
@@ -29,7 +31,7 @@ async function handleSignup() {
 <template>
   <div class="auth-page">
     <FormCard title="Signup">
-    <form class="input" @submit.prevent="handleSignup">
+      <form class="input" @submit.prevent="handleSignup">
         <Input label="Name" v-model="name" />
         <Input label="Surname" v-model="surname" />
         <Input label="Username" v-model="username" />
@@ -41,5 +43,4 @@ async function handleSignup() {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
