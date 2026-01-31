@@ -2,6 +2,9 @@
 import SearchBar from '@/components/SearchBar.vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue'
+import { useAuthStore } from '@/store/auth.js'
+const { user } = useAuthStore()
+
 const open = ref(false);
 const searching = ref(false);
 
@@ -32,10 +35,14 @@ onMounted(() => {
       </div>
 
       <div class="left">
-        <div class="auth">
+        <div v-if="!user" class="auth">
           <RouterLink to="/login">Login</RouterLink>
           <RouterLink to="/signup">Signup</RouterLink>
         </div>
+        <div v-else class="auth">
+        <RouterLink to="/whoami">{{ user }}</RouterLink>
+        </div>
+
 
         <div class="search" @click="searching = true">
           <span class="material-symbols-outlined search-icon">search</span>
