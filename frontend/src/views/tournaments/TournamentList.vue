@@ -1,6 +1,6 @@
 <script setup>
 import { list } from '@/services/tournaments.js'
-import List from '@/components/List.vue'
+import ListPage from '@/components/ListPage.vue'
 import router from '@/router'
 
 let openTournament = function(tournament) {
@@ -10,11 +10,11 @@ let openTournament = function(tournament) {
 </script>
 
 <template>
-  <List :list="list" 
+  <ListPage :list="list" 
         title="Tournaments" 
         search="Search tournaments" 
         :name="element => element.name" 
-        :info="element => element.date" 
+        :info="element => element.date.split('T')[0]" 
         :icon="element => element.sport === 'football' ? 'futbol' : element.sport"
         @click="openTournament"  />
 </template>

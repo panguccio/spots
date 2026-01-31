@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import ListElement from '@/components/ListElement.vue'
+import List from '@/components/List.vue'
 import Error from '@/components/Error.vue'
 
 const elementlist = ref([])
@@ -39,13 +40,13 @@ watch(searchTerm, (newTerm) => {
 </script>
 
 <template>
-
-  <Error v-if="error" :error="error"/>
-      <ul class="list">
-        <ListElement v-for="element in elementlist" :key="element._id" :name="name(element)" :info="info(element)" :icon="icon(element)" 
-          @click="$emit('click', element)"/>
-      </ul>
-
+  <div class="list-page">
+    <h2>{{ title }}</h2>
+    <div class="search-container">
+      <SearchBar v-model="searchTerm" :placeholder="search" />
+      <div class="list"> <List :list :title :name :info :icon @click="$emit('click', $event)" /> </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -57,20 +58,19 @@ h2 {
 }
 
 
-
-
-.list {
-    max-width: 400px;
+.list-page {
+  max-width: 900px;
   margin: 0 auto;
   padding: 24px;
   display: flex;
   flex-direction: column;
   color: white;
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  
+}
+
+.list {
+  width: 400px;
+  margin: auto;
 }
 
 .search-container {

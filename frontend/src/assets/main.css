@@ -59,11 +59,10 @@ p, label {
 }
 
 a {
-  color: white;
+  color: inherit;
   text-decoration: none;
 }
 
 a:hover {
   color: #c2993e;
-  text-decoration: underline;
 }

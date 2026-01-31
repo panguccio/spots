@@ -1,6 +1,6 @@
 <script setup>
 import { list } from '@/services/teams.js'
-import List from '@/components/List.vue'
+import ListPage from '@/components/ListPage.vue'
 import router from '@/router'
 
 let openTeam = function(team) {
@@ -10,7 +10,7 @@ let openTeam = function(team) {
 </script>
 
 <template>
-  <List :list="list" 
+  <ListPage :list="list" 
         title="Teams" 
         search="Search teams" 
         :name="element => element.name" 

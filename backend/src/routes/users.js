@@ -6,8 +6,8 @@ let { verifyToken } = require("../modules/jwt.js");
 
 let pipeline = match => [
     { $match: match },
-    { $lookup: { from: "tournaments", localField: "_id", foreignField: "creatorUserId", as: "tournaments" } },
-    { $addFields: { tournaments: { $map: { input: "$tournaments", as: "t", in: "$$t._id" } } } },
+    { $lookup: { from: "tournaments", localField: "_id", foreignField: "organizerId", as: "tournamentsIds" } },
+    { $addFields: { tournamentsIds: { $map: { input: "$tournamentsIds", as: "t", in: "$$t._id" } } } },
     { $project: { hash: 0 } }
 ]
 

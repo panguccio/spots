@@ -7,15 +7,18 @@ import { useRoute } from 'vue-router'
 
 import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
+import Standings from '@/components/Standings.vue'
+import Schedule from '@/components/Schedule.vue'
+
 
 let loading = ref(true)
 const tournamentId = useRoute().params.id
 const tournament = ref({})
 const schedule = ref([])
-const standingsData = ref({})
+const standingsStats = ref({})
 const error = ref(null)
-const teamsInfo = ref({});
-const user = ref('')
+const teamsNames = ref({});
+const user = ref({})
 
 
 async function getDetails() {
@@ -39,24 +42,22 @@ async function getMatches() {
 async function getStandings() {
   error.value = null;
   try {
-    standingsData.value = await standings(tournamentId)
+    standingsStats.value = await standings(tournamentId)
   } catch (err) {
     error.value = err;
   }
 }
 
 async function getNames() {
-  const ids = standingsData.value.standings;
-  const stats = standingsData.value.teams;
   error.value = null;
-  let teams = stats;
+  const ids = tournament.value.teamsIds;
+  let teams = {};
   try {
     for (let id of ids) {
       const team = await teamDetails(id);
-      teams[id].name = team.name;
+      teams[id] = team.name;
     }
-    teamsInfo.value = teams;
-    return teams;
+    teamsNames.value = teams;
   } catch (err) {
     error.value = err;
   }
@@ -73,56 +74,51 @@ async function getUserName() {
 
 async function loadPage() {
   loading.value = true;
-  await getDetails(); 
-  await getStandings(); 
-  await getNames(); 
-  await getMatches(); 
+  await getDetails();
+  await getStandings();
+  await getNames();
+  await getMatches();
   await getUserName();
   loading.value = false;
 }
 
-onMounted( async () => { await loadPage() })
+onMounted(async () => { await loadPage() })
 
 </script>
 
 <template>
-  <div class="tournament-content" >
+  <div class="tournament-content">
 
     <div class="element-card">
-      <h2>Tournament Details</h2>
+      <h2>Tournament details</h2>
       <hr />
       <article v-if="!loading">
-      <section class="element">
-        <h3>{{ tournament.name }}</h3>
-        <div class="info">
-          <p><strong>sport:</strong> {{ tournament.sport }}</p>
-          <p><strong>status:</strong> {{ tournament.status }}</p>
-          <p><strong>date:</strong> {{ tournament.date.split('T')[0] }} </p> 
-          <p><strong>organizer:</strong> {{ user.name }} {{ user.surname }}</p>
-        </div>
-      </section>
-      <section class="matches">
-        <h4>Matches Schedule</h4>
-        <div v-for="match in schedule" :key="match._id" class="match">
-          {{ teamsInfo[match.team1Id].name }} vs {{ teamsInfo[match.team2Id].name }} - {{ match.date.split('T')[0] }} -
-          status:
-          {{ match.status }} - points: {{ match.points1 }} - {{ match.points2 }}
-        </div>
-      </section>
-      <section class="schedule">
-        <h4>Standings</h4>
-        <div v-for="team in standingsData.standings" :key="team" class="picker">
-          {{ teamsInfo[team].name }} - played: {{ teamsInfo[team].played }} - scored: {{ teamsInfo[team].scored }} -
-          conceded: {{ teamsInfo[team].conceded }} - points: {{ teamsInfo[team].points }} - diff: {{ teamsInfo[team].diff }}
-        </div>
-      </section>
+        <section class="element">
+          <h3>{{ tournament.name }}</h3>
+          <div class="info">
+            <p><strong>Sport:</strong> {{ tournament.sport }}</p>
+            <p><strong>Date:</strong> {{ tournament.date.split('T')[0] }} </p>
+            <p><strong>Status:</strong> {{ tournament.status }}</p>
+            <p> <RouterLink :to="`/users/${user._id}`"><strong>Organizer:</strong> {{ user.name }} {{ user.surname }}</RouterLink></p>
+          </div>
+        </section>
+        <section class="schedule">
+          <h3>Matches Schedule</h3>
+          <Schedule :schedule="schedule" :teamsNames="teamsNames" />
+        </section>
+        <section class="standings">
+          <h3>Standings</h3>
+          <Standings :standingsStats :teamsNames />
+        </section>
       </article>
-      <div v-else><p>Loading data...</p></div>
+      <div v-else>
+        <p>Loading data...</p>
+      </div>
     </div>
 
     <Error v-if="error" :error="error" />
   </div>
-  
+
 </template>
 
 <style scoped>
@@ -170,7 +166,14 @@ hr {
   margin: 0;
 }
 
-.element {
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+section {
   display: flex;
   flex-direction: column;
   align-items: center;

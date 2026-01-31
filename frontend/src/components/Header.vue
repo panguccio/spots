@@ -173,6 +173,15 @@ nav {
   z-index: 9999;
 }
 
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #c2993e;
+}
+
 @media (max-width: 800px) {
 
   .menu,

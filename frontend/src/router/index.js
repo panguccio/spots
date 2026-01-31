@@ -26,7 +26,7 @@ import TournamentList from "@/views/tournaments/TournamentList.vue"
 import TournamentNew from "@/views/tournaments/TournamentNew.vue"
 import Tournament from "@/views/tournaments/Tournament.vue"
 import TournamentEdit from "@/views/tournaments/TournamentEdit.vue"
-import MatchEdit from "@/views/tournaments/MatchEdit.vue"
+import Match from "@/views/tournaments/Match.vue"
 
 
 
@@ -52,7 +52,7 @@ const routes = [
   { path: "/tournaments/new", name: "tournamentnew", component: TournamentNew},
   { path: "/tournaments/:id", name: "tournament", component: Tournament},
   { path: "/tournaments/:id/edit", name: "tournamentedit", component: TournamentEdit},
-  { path: "/matches/:id", name: "match", component: MatchEdit},
+  { path: "/matches/:id", name: "match", component: Match},
 ];
 
 const router = createRouter({

@@ -5,16 +5,13 @@ import { details as userDetails } from "@/services/users.js";
 import { useRoute } from "vue-router";
 
 import Error from "@/components/Error.vue";
-import Button from "@/components/Button.vue";
 
 let loading = ref(true);
 const teamId = useRoute().params.id;
 const team = ref({});
 const playerList = ref([]);
-const standingsData = ref({});
 const error = ref(null);
-const teamsInfo = ref({});
-const user = ref("");
+const user = ref({});
 
 async function getDetails() {
   error.value = null;
@@ -44,6 +41,7 @@ async function loadPage() {
 
 async function getUserName() {
   const id = team.value.organizerId;
+  if (!id) return
   try {
     user.value = await userDetails(id);
   } catch (err) {
@@ -65,13 +63,16 @@ onMounted(async () => {
         <section class="element">
           <h3>{{ team.name }}</h3>
           <div class="info">
-            <p><strong>organizer:</strong> {{ user.name }} {{ user.surname }}</p>
+            <p><RouterLink :to="`/users/${user._id}`"><strong>Organizer:</strong> {{ user.name }} {{ user.surname }}</RouterLink></p>
           </div>
         </section>
         <section class="players">
           <h4>Players</h4>
-          <div v-for="player in playerList" :key="player._id" class="match">
-            {{ player.name }} {{ player.surname }} {{ player.jerseyNumber }}
+          <div v-for="player in playerList" :key="player._id" class="player-card">
+            <div class="player-info">
+              <span>{{ player.name }} {{ player.surname }}</span>
+            </div>
+            <div class="jersey-number">{{ player.jerseyNumber }}</div>
           </div>
         </section>
       </article>
@@ -111,6 +112,12 @@ p {
   margin: 0;
 }
 
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .element-card {
   background-color: rgb(230, 243, 230);
   padding: 32px;
@@ -141,38 +148,41 @@ hr {
   padding: 8px;
 }
 
-.slots {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.booking {
+.players {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* spazio tra i player */
 }
 
-.input {
+.player-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: #1e3c2f;
+}
+
+.player-info {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 2px;
 }
 
-.picker {
+.jersey-number {
+  background: #2e7d32;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-}
-
-.time-input {
-  border: none;
-  border-radius: 8px;
-  padding: 6px 8px;
-  font-size: 16px;
-
-  height: 36px;
-  line-height: 1;
+  font-weight: 600;
+  font-size: 14px;
 }
 </style>

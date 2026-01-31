@@ -1,6 +1,6 @@
 <script setup>
 import { list } from '@/services/fields.js'
-import List from '@/components/List.vue'
+import ListPage from '@/components/ListPage.vue'
 import router from '@/router'
 
 let openField = function(field) {
@@ -10,7 +10,7 @@ let openField = function(field) {
 </script>
 
 <template>
-  <List :list="list" 
+  <ListPage :list="list" 
         title="Fields" 
         :name="element => element.name" 
         search="Search fields" 
