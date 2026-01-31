@@ -1,89 +1,120 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { details, slots, book } from '@/services/fields.js'
-import { useRoute } from 'vue-router'
+import { onMounted, ref } from "vue";
+import { details, slots, book } from "@/services/fields.js";
+import { useRoute } from "vue-router";
+import { useAuthStore } from "@/store/auth";
 
-import Error from '@/components/Error.vue'
-import TimeSlot from '@/components/TimeSlot.vue'
-import Button from '@/components/Button.vue'
+const { user } = useAuthStore();
 
-const fieldId = useRoute().params.id
-const freeSlots = ref([])
-const field = ref({})
-const error = ref(null)
-const today = new Date().toISOString().split('T')[0];
+import Error from "@/components/Error.vue";
+import TimeSlot from "@/components/TimeSlot.vue";
+import Button from "@/components/Button.vue";
+
+const fieldId = useRoute().params.id;
+const freeSlots = ref([]);
+const field = ref({});
+const error = ref(null);
+const today = new Date().toISOString().split("T")[0];
 const selectedDate = ref(today);
 const selectedStartTime = ref("09:00");
 const selectedEndTime = ref("22:00");
 
 async function getDetails() {
-  error.value = null
+  error.value = null;
   try {
-    field.value = await details(fieldId)
+    field.value = await details(fieldId);
   } catch (err) {
     error.value = err;
   }
 }
 
 async function getSlots(date = today) {
-  error.value = null
+  error.value = null;
   try {
-    freeSlots.value = await slots(fieldId, date)
+    freeSlots.value = await slots(fieldId, date);
   } catch (err) {
     error.value = err;
   }
 }
 
 async function bookSlot(fieldId, date, startTime, endTime) {
-  error.value = null
+  error.value = null;
   try {
-    await book(fieldId, date, startTime, endTime)
+    await book(fieldId, date, startTime, endTime);
   } catch (err) {
     error.value = err;
   }
 }
 
-onMounted(() => {getDetails(), getSlots()})
-
+onMounted(() => {
+  getDetails(), getSlots();
+});
 </script>
 
 <template>
   <div class="field-content">
-  
-      <div class="element-card">
-        <h2 >Field Details</h2>
-        <hr />
-        <div class="element">
-          <h3>{{ field.name }}</h3>
-          <div class="info">
-            <p><strong>Address:</strong> {{ field.address }}</p>
-            <p><strong>Here you can play:</strong> {{ field.sport }}</p>
-          </div>
-        </div>
-        <div class="slots">
-          <div class="picker">
-            <h4>Available slots for date: </h4> <input class="time-input" type="date" v-model="selectedDate" @change="getSlots(selectedDate)" />
-          </div>
-          <TimeSlot :freeSlots="freeSlots" />
-        </div>
-        <div class="booking">
-          <h4>Wanna book a slot?</h4>
-          <form class="input" @submit.prevent="bookSlot(fieldId, selectedDate, selectedStartTime, selectedEndTime)">
-            <div class="picker">
-                <p> Start time:</p> <input class="time-input" type="time" v-model="selectedStartTime" min="09:00" max="21:30" value="09:00" />
-                <p> End time:</p><input class="time-input" type="time" v-model="selectedEndTime" min="09:30" max="22:00" value="22:00" />
-              </div>
-            <Button>Book!</Button>
-          </form>
+    <div class="element-card">
+      <h2>Field Details</h2>
+      <hr />
+      <div class="element">
+        <h3>{{ field.name }}</h3>
+        <div class="info">
+          <p><strong>Address:</strong> {{ field.address }}</p>
+          <p><strong>Here you can play:</strong> {{ field.sport }}</p>
         </div>
       </div>
+      <div class="slots">
+        <div class="picker">
+          <h4>Available slots for date:</h4>
+          <input
+            class="time-input"
+            type="date"
+            v-model="selectedDate"
+            @change="getSlots(selectedDate)"
+          />
+        </div>
+        <TimeSlot :freeSlots="freeSlots" />
+      </div>
+      <div class="booking">
+        <h4>Wanna book a slot?</h4>
+        <form
+          v-if="user"
+          class="input"
+          @submit.prevent="
+            bookSlot(fieldId, selectedDate, selectedStartTime, selectedEndTime)
+          "
+        >
+          <div class="picker">
+            <p>Start time:</p>
+            <input
+              class="time-input"
+              type="time"
+              v-model="selectedStartTime"
+              min="09:00"
+              max="21:30"
+              value="09:00"
+            />
+            <p>End time:</p>
+            <input
+              class="time-input"
+              type="time"
+              v-model="selectedEndTime"
+              min="09:30"
+              max="22:00"
+              value="22:00"
+            />
+          </div>
+          <Button>Book!</Button>
+        </form>
+        <p v-else>Login or signup to book slots.</p>
+      </div>
+    </div>
 
     <Error v-if="error" :error="error" />
   </div>
 </template>
 
 <style scoped>
-
 h2,
 h3,
 h4 {
@@ -174,5 +205,4 @@ hr {
   height: 36px;
   line-height: 1;
 }
-
 </style>
