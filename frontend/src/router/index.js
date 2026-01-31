@@ -13,9 +13,6 @@ import Profile from "@/views/users/Profile.vue"
 // fields
 import FieldList from "@/views/fields/FieldList.vue"
 import Field from "@/views/fields/Field.vue"
-import BookField from "@/views/fields/BookField.vue"
-import FieldBookings from "@/views/fields/FieldBookings.vue"
-import FieldBooking from "@/views/fields/FieldBooking.vue"
 
 // teams
 import PlayerList from "@/views/teams/PlayerList.vue"
@@ -48,9 +45,6 @@ const routes = [
 
   { path: "/fields", name: "fieldlist", component: FieldList},
   { path: "/fields/:id", name: "field", component: Field},
-  { path: "/fields/:id/slots", name: "bookfield", component: BookField},
-  { path: "/fields/:id/bookings", name: "fieldbookings", component: FieldBookings},
-  { path: "/fields/:id/bookings/:bookingId", name: "fieldbooking", component: FieldBooking},
 
   { path: "/players", name: "playerlist", component: PlayerList},
   { path: "/teams", name: "teamlist", component: TeamList},
@@ -58,6 +52,7 @@ const routes = [
   { path: "/teams/:id", name: "team", component: Team},
   { path: "/teams/:id/edit", name: "teamedit", component: TeamEdit}, // also for deleting it
   { path: "/teams/:id/players", name: "teamplayers", component: TeamPlayers},
+  
   { path: "/tournaments", name: "tournamentlist", component: TournamentList},
   { path: "/tournaments/new", name: "tournamentnew", component: TournamentNew},
   { path: "/tournaments/:id", name: "tournament", component: Tournament},

@@ -16,14 +16,14 @@ export function slots(id, date) {
 }
 
 export function book(id, date, startHour, endHour) {
-  return apiFetch(`/${name}/${id}/slots`, {
+  return apiFetch(`/${name}/${id}/bookings`, {
     method: 'POST',
     body: JSON.stringify({ date, startHour, endHour })
   })
 }
 
 export function unbook(id) {
-  return apiFetch(`/${name}/${id}/slots`, {
+  return apiFetch(`/${name}/bookings/${id}`, {
     method: 'DELETE'
   })
 }

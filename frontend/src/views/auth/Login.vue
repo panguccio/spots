@@ -16,8 +16,8 @@ const error = ref(null)
 async function handleLogin() {
   error.value = null
   try {
-    const token = await login(username.value, password.value)
-    localStorage.setItem('token', token)
+    const res = await login(username.value, password.value)
+    localStorage.setItem('token', res.token)
     router.push({ name: 'home' })
   } catch (err) {
     error.value = err;

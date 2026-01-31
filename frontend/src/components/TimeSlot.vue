@@ -46,8 +46,7 @@ function isBooked(index) {
 
 <style scoped>
 .time-slots {
-    margin-top: 2rem;
-    background-color: #f8f9fa;
+    background-color: #f8f9fa7d;
     border-radius: 8px;
     overflow-x: auto;
 }
@@ -56,7 +55,7 @@ function isBooked(index) {
     display: flex;
     flex-direction: row;
     align-items: stretch;
-    background: white;
+    background: rgba(255, 255, 255, 0.38);
     border-radius: 6px;
     padding: 1rem 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -74,7 +73,7 @@ function isBooked(index) {
 .time-label {
     font-size: 0.75rem;
     font-weight: 500;
-    color: black;
+    color: #1e3c2f;
     text-align: center;
     height: 2rem;
     display: flex;
@@ -100,7 +99,7 @@ function isBooked(index) {
 .separator {
     width: 2px;
     height: 30px;
-    background-color: black;
+    background-color: #1e3c2f;
     flex-shrink: 0;
     border-radius: 1px;
 }
@@ -109,7 +108,6 @@ function isBooked(index) {
     flex: 1 1 0;
     height: 24px;
     min-width: 0;
-    /* Permette il shrink */
 }
 
 .booking.booked {
