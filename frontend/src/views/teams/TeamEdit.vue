@@ -1,7 +1,7 @@
 <script setup>
 
 import { ref, onMounted } from 'vue'
-import { edit, cancel, listPlayers } from '@/services/teams'
+import { edit, cancel, listPlayers, createPlayer } from '@/services/teams'
 import Multiselect from 'vue-multiselect'
 import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
@@ -29,32 +29,33 @@ async function players() {
 }
 
 const form = ref({
-  name: "",
+  name: props.team.name,
   addPlayers: [],
-  remPlayers: []
+  remPlayers: [],
+  playerName: "",
+  playerSurname: "",
+  jerseyNumber: "",
 })
 
-function submit() {
-  if (!props.team || !props.team._id) {
-    console.error("Tournament not defined yet")
-    return
-  }
+async function submit() {
+  if (!props.team?._id) return
 
-  edit(
-    props.team._id,
-    form.value.name,
-    form.value.addPlayers.map(p => p._id),
-    form.value.remPlayers.map(p => p._id)
-  ).then(() => {
+  try {
+    if (form.value.playerName && form.value.playerSurname && form.value.jerseyNumber) {
+      const result = await createPlayer(form.value.playerName, form.value.playerSurname, form.value.jerseyNumber)
+      form.value.addPlayers.push({_id: result.insertedId});
+    }
+    await edit(props.team._id, form.value.name, form.value.addPlayers.map(p => p._id), form.value.remPlayers.map(p => p._id))
     emit('saved')
-  }).catch(err => {
-    console.error(err)
-  })
+  } catch (err) {
+    error.value = err;
+  }
 }
 
 async function loadPage() {
   loading.value = true;
   await players();
+  notTeamPlayers.value = allPlayers.value.filter(p => !props.team.playersIds.includes(p._id))
   loading.value = false;
 }
 
@@ -68,20 +69,26 @@ onMounted(async () => { await loadPage() })
     <Error v-if="error" :error="error" />
     <h3>Edit team</h3>
     <form @submit.prevent="submit">
-      <label>Name: <input id="team-name" type="text" v-model="form.name"></label>
-      <label>Add teams:
-        <Multiselect class="multiselect" id="team-add-players" v-model="form.addPlayers"
-          :options="notTeamPlayers" label="surname" track-by="_id" placeholder="Select players" :multiple="true"
-          :searchable="true" />
+      <label>Team name: <input id="team-name" type="text" v-model="form.name"></label>
+      <label>Add existing players:
+        <Multiselect class="multiselect" id="team-add-players" v-model="form.addPlayers" :options="notTeamPlayers"
+          label="surname" track-by="_id" placeholder="Select players" :multiple="true" :searchable="true" />
       </label>
-      <label>Remove teams:
+      <label>Remove existing players:
         <Multiselect class="multiselect" id="team-rem-players" v-model="form.remPlayers" :options="teamPlayers"
           label="surname" track-by="_id" placeholder="Select players" :multiple="true" :searchable="true" />
       </label>
+      <label>Add new player:
+        <div class="player">
+          <input id="player-name" type="text" v-model="form.playerName" placeholder="Name">
+          <input id="player-surname" type="text" v-model="form.playerSurname" placeholder="Surname">
+          <input id="player-number" type="number" v-model="form.jerseyNumber" placeholder="Jersey Number">
+        </div>
+      </label>
       <div class="buttons">
-        <Button variant="danger" @pressed="cancel(tournament._id)"><font-awesome-icon class="icon"
+        <Button variant="danger" @pressed="cancel(props.team._id)"><font-awesome-icon class="icon"
             icon="trash" /></Button>
-        <Button @pressed="submit">Save</Button>
+        <Button>Save</Button>
       </div>
     </form>
   </section>
@@ -123,7 +130,7 @@ p {
 }
 
 .edit-card {
-  backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
   border-radius: 16px;
   max-width: 450px;
   width: 100%;
@@ -153,6 +160,17 @@ label {
   font-weight: 500;
   color: #1e3c2f;
 }
+
+.player {
+  display: flex;
+  gap: 8px;
+}
+
+.player input {
+  flex: 1;
+  min-width: 0;
+}
+
 
 input,
 select {
@@ -204,5 +222,4 @@ select {
 .multiselect :deep(.multiselect__tag-icon:hover) {
   background: #aecaaf;
 }
-
 </style>
