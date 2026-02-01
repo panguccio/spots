@@ -94,4 +94,116 @@ onMounted(async () => { await loadPage() })
 
 </script>
 
-<style scoped></style>
+<style scoped>
+h2,
+h3,
+h4 {
+  color: #1e3c2f;
+  margin: 0;
+}
+
+h2 {
+  font-size: 30px;
+  text-align: left;
+}
+
+h3 {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+h4 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+p {
+  color: #1e3c2f;
+  margin: 0;
+}
+
+.edit-card {
+  backdrop-filter: blur(10px); 
+  border-radius: 16px;
+  max-width: 450px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+}
+
+hr {
+  border: 2px solid #1e3c2f;
+  margin: 0;
+  min-width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 500;
+  color: #1e3c2f;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  height: 36px;
+  line-height: 1;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.multiselect :deep(.multiselect__tags) {
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  background: white;
+}
+
+.multiselect :deep(.multiselect__select) {
+  height: 36px;
+}
+
+.multiselect :deep(.multiselect__input),
+.multiselect :deep(.multiselect__single) {
+  margin: 0;
+  padding: 0;
+  line-height: 24px;
+  font-size: 16px;
+}
+
+.multiselect :deep(.multiselect__tag) {
+  background: #2d8632b9;
+  margin: 2px 4px 2px 0;
+}
+
+.multiselect :deep(.multiselect__tag-icon:hover) {
+  background: #aecaaf;
+}
+
+</style>

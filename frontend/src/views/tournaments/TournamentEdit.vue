@@ -112,7 +112,7 @@ onMounted(async () => { await loadPage() })
       </label>
       <div class="buttons">
       <Button variant="danger" @pressed="cancel(tournament._id)"><font-awesome-icon class="icon" icon="trash"/></Button>
-      <Button variant="outline" @pressed="schedule(tournament._id)">New schedule*</Button>
+      <Button variant="danger" @pressed="schedule(tournament._id)">New schedule</Button>
       <Button @pressed="submit">Save</Button>
       </div>
     </form>
@@ -206,15 +206,10 @@ select {
 }
 
 .multiselect :deep(.multiselect__tags) {
-  min-height: 36px;
-  height: 36px;
-  padding: 6px 36px 6px 10px;
   border-radius: 8px;
   border: none;
   font-size: 16px;
   background: white;
-  display: flex;
-  align-items: center;
 }
 
 .multiselect :deep(.multiselect__select) {
@@ -230,7 +225,7 @@ select {
 }
 
 .multiselect :deep(.multiselect__tag) {
-  background: #2e7d32;
+  background: #2d8632b9;
   margin: 2px 4px 2px 0;
 }
 
@@ -238,8 +233,6 @@ select {
   background: #aecaaf;
 }
 
-.multiselect :deep(.multiselect__content-wrapper) {
-  border-radius: 8px;
-}
+
 
 </style>
