@@ -41,6 +41,7 @@ async function bookSlot(fieldId, date, startTime, endTime) {
   error.value = null;
   try {
     await book(fieldId, date, startTime, endTime);
+    getSlots(date)
   } catch (err) {
     error.value = err;
   }

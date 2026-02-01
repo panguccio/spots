@@ -12,7 +12,8 @@ import {
   faVolleyball,
   faBasketball,
   faUser,
-  faUsers
+  faUsers,
+  faTrash
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -20,7 +21,8 @@ library.add(
   faVolleyball,
   faBasketball,
   faUser,
-  faUsers
+  faUsers,
+  faTrash
 )
 
 const app = createApp(App)

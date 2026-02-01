@@ -16,7 +16,7 @@ defineProps({
     class="btn"
     :class="variant"
     :disabled="disabled"
-  >
+    @click="$emit('click')">
     <slot />
   </button>
 </template>
@@ -49,7 +49,7 @@ defineProps({
 /* DANGER (corallo) */
 
 .danger {
-  background: #ff5757;
+  background: #dc3545;
   color: white;
 }
 

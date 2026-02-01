@@ -19,6 +19,7 @@ export function useAuthStore() {
 
     localStorage.removeItem('user')
     localStorage.removeItem('token')
+    
   }
 
   return {

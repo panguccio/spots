@@ -5,10 +5,12 @@ import { details as tournamentDetails } from "@/services/tournaments.js";
 import { useRoute } from "vue-router";
 import List from '@/components/List.vue'
 import router from '@/router'
+import Error from '@/components/Error.vue'
+
 
 const props = defineProps({
   user: Object,
-  title: {type: String, default: "User"}
+  title: { type: String, default: "User" }
 });
 
 let loading = ref(true);
@@ -16,14 +18,16 @@ const user = ref(props.user || null)
 const userId = useRoute().params.id;
 const error = ref(null);
 
-async function getDetails() { 
+async function getDetails() {
+  if (userId != undefined) {
     error.value = null;
     try {
       user.value = await details(userId);
     } catch (err) {
       error.value = err;
     }
-  
+  }
+
 }
 
 async function list() {
@@ -55,7 +59,7 @@ let openTournament = function (tournament) {
 <template>
   <div class="user">
     <div class="element-card">
-      <h2>{{title}}</h2>
+      <h2>{{ title }}</h2>
       <hr />
       <article v-if="!loading">
         <section class="element">

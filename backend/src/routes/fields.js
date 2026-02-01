@@ -93,10 +93,10 @@ router.post("/:id/bookings", verifyToken, async (req, res) => {
 });
 
 // cancel a booking (id) (auth)
-router.delete("/fields/:id/bookings/:bookingId", verifyToken, async (req, res) => {
+router.delete("/:id/bookings/:bookingId", verifyToken, async (req, res) => {
     const mongo = await db.connect();
     const result = await mongo.collection("bookings").deleteOne({ _id: new ObjectId(req.params.bookingId), userId: new ObjectId(req.user.id) })
-    if (result.deletedCount === 0) { return res.status(409).json({ message: "Failed to cancel field booking: User not authorized or tournament not found."}) };
+    if (result.deletedCount == 0) { return res.status(409).json({ message: "Failed to cancel field booking: User not authorized or invalid booking Id."}) };
     res.status(201).json(result);
 });
 

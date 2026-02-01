@@ -22,8 +22,8 @@ export function book(id, date, startHour, endHour) {
   })
 }
 
-export function unbook(id) {
-  return apiFetch(`/${name}/bookings/${id}`, {
+export function unbook(id, bookingId) {
+  return apiFetch(`/${name}/${id}/bookings/${bookingId}`, {
     method: 'DELETE'
   })
 }

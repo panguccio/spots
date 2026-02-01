@@ -2,14 +2,20 @@
 import { onMounted, ref } from "vue";
 import User from '@/views/users/User.vue'
 import { profile, bookings } from '@/services/users.js'
+import { unbook } from '@/services/fields.js'
+import Button from '@/components/Button.vue'
+import Error from '@/components/Error.vue'
+import router from '@/router'
+
 
 import { useAuthStore } from '@/store/auth.js'
 const { logout } = useAuthStore()
 
-const user = ref(null)
-const pippo = ref(null)
+const user = ref(null);
+const pippo = ref(null);
 const error = ref(null);
-const myBookings = ref([])
+const myBookings = ref([]);
+const isDeleting = ref(false);
 
 async function getUser() {
   error.value = null;
@@ -24,7 +30,7 @@ async function getBookings() {
   error.value = null;
   try {
     myBookings.value = await bookings();
-    myBookings.value.sort((a,b) => new Date(a.start) - new Date(b.start))
+    myBookings.value.sort((a, b) => new Date(a.start) - new Date(b.start))
   } catch (err) {
     error.value = err;
   }
@@ -32,9 +38,28 @@ async function getBookings() {
 
 onMounted(() => { getUser(), getBookings() })
 
-let formatTime = function(date) {
-    return date.split('T')[1].slice(0, 5)
+let formatTime = function (date) {
+  return date.split('T')[1].slice(0, 5)
 }
+
+let deleteBooking = async function (b) {
+  if (isDeleting.value) return
+  try {
+    isDeleting.value = true;
+    await unbook(b.fieldId, b._id)
+  } catch (err) {
+    error.value = err;
+  } finally {
+    await getBookings()
+    isDeleting.value = false;
+  }
+}
+
+let exit = async function() {
+  logout();
+  router.push({name: "home"})
+}
+
 
 </script>
 
@@ -46,12 +71,15 @@ let formatTime = function(date) {
         <h4>{{ user.name }}'s Bookings</h4>
         <ul class="booking-list">
           <li v-for="b in myBookings" :key="b._id" class="booking-item">
-            <span class="date"> {{ b.start.split('T')[0]}} </span>
+            <span class="date"> {{ b.start.split('T')[0] }} </span>
             <span class="time">{{ formatTime(b.start) }} → {{ formatTime(b.end) }}</span>
+            <span class="delete"><Button variant="danger" @click="deleteBooking(b)"><font-awesome-icon class="icon" icon="trash"/></Button></span>
           </li>
         </ul>
-
-        <p v-if="!bookings.length">No bookings yet.</p>
+        <p v-if="!myBookings.length">No bookings yet.</p>
+      </section>
+      <section class="logout">
+      <span class="logout-button"><Button variant="danger" @click="exit">Logout</Button></span>
       </section>
     </User>
     <p v-else>To see your profile,<RouterLink :to="{ name: 'login' }"> login</RouterLink>
@@ -73,6 +101,7 @@ h4 {
   font-size: 20px;
   margin-bottom: 8px;
 }
+
 .bookings {
   display: flex;
   flex-direction: column;
@@ -95,7 +124,7 @@ h4 {
   border-radius: 8px;
 
   display: grid;
-  grid-template-columns: 110px 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
 }
 
@@ -107,8 +136,10 @@ h4 {
 .time {
   text-align: center;
   font-family: monospace;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  margin: auto;
+}
+
+.delete {
+  text-align: right;
 }
 </style>
