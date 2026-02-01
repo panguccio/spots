@@ -43,44 +43,33 @@ router.get("/:id", async (req, res) => {
 
 // edit tournament data (id) (auth) (body)
 router.put("/:id", verifyToken, async (req, res) => {
-    // assuming date comes as: YYYY-MM-DD
     const { name, sport, maxTeams, date, addTeams, remTeams } = req.body;
-
-    let result;
     const mongo = await db.connect();
-
     const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
-    let updateDocument = {};
 
-    if (name || sport || maxTeams || date) {
-        updateDocument.$set = {};
-        if (name) updateDocument.$set.name = name;
-        if (sport) updateDocument.$set.sport = sport;
-        if (maxTeams) updateDocument.$set.maxTeams = Number(maxTeams);
-        if (date) updateDocument.$set.date = new Date(date);
+    let updateSet = {};
+    if (name) updateSet.name = name;
+    if (sport) updateSet.sport = sport;
+    if (maxTeams) updateSet.maxTeams = Number(maxTeams);
+    if (date) updateSet.date = new Date(date);
+
+    if (Object.keys(updateSet).length > 0) {
+        await mongo.collection("tournaments").updateOne(filter, { $set: updateSet });
     }
 
-    if (addTeams && Array.isArray(addTeams)) {
-        let teamsIds = addTeams.map(id => new ObjectId(id));
-        updateDocument.$addToSet = { teamsIds: { $each: teamsIds } };
+    if (addTeams && Array.isArray(addTeams) && addTeams.length > 0) {
+        const addIds = addTeams.map(id => new ObjectId(id));
+        await mongo.collection("tournaments").updateOne(filter, { $addToSet: { teamsIds: { $each: addIds } } });
     }
 
-    if (remTeams && Array.isArray(remTeams)) {
-        let teamsIds = remTeams.map(id => new ObjectId(id));
-        updateDocument.$pull = { teamsIds: { $in: teamsIds } };
+    if (remTeams && Array.isArray(remTeams) && remTeams.length > 0) {
+        const remIds = remTeams.map(id => new ObjectId(id));
+        await mongo.collection("tournaments").updateOne(filter, { $pull: { teamsIds: { $in: remIds } } });
     }
 
-    if (Object.keys(updateDocument).length === 0) {
-        return res.status(400).json({ message: "Empty fields."});
-    }
-
-    result = await mongo.collection("tournaments").updateOne(filter, updateDocument);
-    if (result.matchedCount === 0) {
-        return res.status(404).json({ message: "Failed to edit tournament: User is not organizer of this tournament (unauthorized)."});
-    }
-
-    res.status(201).json(result);
+    res.status(201).json({ message: "Tournament updated successfully" });
 });
+
 
 // cancel the tournament (id) (auth)
 router.delete("/:id", verifyToken, async (req, res) => {
@@ -99,16 +88,9 @@ router.post("/:id/matches/generate", verifyToken, async (req, res) => {
     if (!tournament) return res.status(404).json({ message: "Failed to generate tournament schedule: User is not organizer of this tournament (unauthorized)."});
     const matchesIds = tournament.matchesIds || [];
     
-    
-    const started = await mongo.collection("matches").findOne({ _id: { $in: matchesIds }, status: "played" });
-    if (started) {
-        return res.status(404).json({ message: "Failed to generate tournament schedule: Some matches are already played, delete them to procede."});
-    } else {
-        await mongo.collection("matches").deleteMany({ tournamentId: new ObjectId(req.params.id) });
-    }
+    await mongo.collection("matches").deleteMany({ tournamentId: new ObjectId(req.params.id) });
 
     const teamIds = tournament.teamsIds;
-
     let matches = [];
 
     for (let i = 0; i < teamIds.length; i++) {

@@ -16,7 +16,7 @@ defineProps({
     class="btn"
     :class="variant"
     :disabled="disabled"
-    @click="$emit('click')">
+    @click="$emit('pressed')">
     <slot />
   </button>
 </template>

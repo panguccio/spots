@@ -15,7 +15,7 @@ let openTeam = function(team) {
         search="Search teams" 
         :name="element => element.name" 
         :info="element => (element.playersIds ? element.playersIds.length : 0)  + ' players'" 
-        :icon="element => 'users'" 
+        :icon="() => 'users'" 
         @click="openTeam" />
 </template>
 

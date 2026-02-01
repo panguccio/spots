@@ -58,8 +58,13 @@ onMounted(() => {
 
         <hr />
 
-        <RouterLink :to="{name: 'login'}">Login</RouterLink>
-        <RouterLink :to="{name: 'signup'}">Signup</RouterLink>
+        <div v-if="!user" class="auth">
+          <RouterLink :to="{name: 'login'}">Login</RouterLink>
+          <RouterLink :to="{name: 'signup'}">Signup</RouterLink>
+        </div>
+        <div v-else class="auth">
+        <RouterLink :to="{name: 'profile'}">{{ user }}</RouterLink>
+        </div>
 
       </div>
     </nav>

@@ -2,9 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
-import ListElement from '@/components/ListElement.vue'
 import List from '@/components/List.vue'
-import Error from '@/components/Error.vue'
 
 const elementlist = ref([])
 const searchTerm = ref('')
@@ -43,7 +41,7 @@ watch(searchTerm, (newTerm) => {
   <div class="list-page">
     <h2>{{ title }}</h2>
     <div class="search-container">
-      <SearchBar v-model="searchTerm" :placeholder="search" />
+      <div class="top"><SearchBar v-model="searchTerm" :placeholder="search" /> </div>
       <div class="list"> <List :list :title :name :info :icon @click="$emit('click', $event)" /> </div>
     </div>
   </div>

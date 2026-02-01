@@ -9,7 +9,10 @@ import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
 import Standings from '@/components/Standings.vue'
 import Schedule from '@/components/Schedule.vue'
+import TournamentEdit from '@/components/TournamentEdit.vue'
+import { useAuthStore } from '@/store/auth.js'
 
+const { user } = useAuthStore()
 
 let loading = ref(true)
 const tournamentId = useRoute().params.id
@@ -18,7 +21,8 @@ const schedule = ref([])
 const standingsStats = ref({})
 const error = ref(null)
 const teamsNames = ref({});
-const user = ref({})
+const organizer = ref({})
+let editing = ref(false)
 
 
 async function getDetails() {
@@ -66,13 +70,14 @@ async function getNames() {
 async function getUserName() {
   const id = tournament.value.organizerId;
   try {
-    user.value = await userDetails(id);
+    organizer.value = await userDetails(id);
   } catch (err) {
     error.value = err;
   }
 }
 
 async function loadPage() {
+  editing = false
   loading.value = true;
   await getDetails();
   await getStandings();
@@ -90,16 +95,29 @@ onMounted(async () => { await loadPage() })
   <div class="tournament-content">
 
     <div class="element-card">
-      <h2>Tournament details</h2>
+      <div class="top">
+        <h2>Tournament details</h2>
+        <div v-if="user == organizer.username">
+          <Button class="edit-button" @pressed="editing = !editing">
+            {{ editing ? 'Cancel' : 'Edit' }}
+          </Button>
+        </div>
+      </div>
       <hr />
       <article v-if="!loading">
+
+        <TournamentEdit v-if="editing" :tournament="tournament" @saved="loadPage()" />
+
         <section class="element">
           <h3>{{ tournament.name }}</h3>
           <div class="info">
             <p><strong>Sport:</strong> {{ tournament.sport }}</p>
             <p><strong>Date:</strong> {{ tournament.date.split('T')[0] }} </p>
             <p><strong>Status:</strong> {{ tournament.status }}</p>
-            <p> <RouterLink :to="`/users/${user._id}`"><strong>Organizer:</strong> {{ user.name }} {{ user.surname }}</RouterLink></p>
+            <p>
+              <RouterLink :to="`/users/${organizer._id}`"><strong>Organizer:</strong> {{ organizer.name }} {{
+                organizer.surname }}</RouterLink>
+            </p>
           </div>
         </section>
         <section class="schedule">
@@ -143,6 +161,12 @@ h4 {
   font-size: 20px;
 }
 
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 p {
   color: #1e3c2f;
   margin: 0;
@@ -170,6 +194,10 @@ article {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.edit-button {
+  align-self: flex-end;
 }
 
 
