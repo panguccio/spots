@@ -11,8 +11,6 @@ const openTournament = function (tournament) {
 }
 
 const newTournament = async function () {
-    console.log("ciao")
-     console.log("ciao")
     error.value = null;
     try {
         const tournament = await create()

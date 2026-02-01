@@ -38,7 +38,7 @@ const routes = [
   { path: "/fields", name: "fields", component: FieldList},
   { path: "/fields/:id", name: "field", component: Field},
 
-  { path: "/players", name: "playerlist", component: PlayerList},
+  { path: "/players", name: "players", component: PlayerList},
   { path: "/teams", name: "teams", component: TeamList},
   { path: "/teams/:id", name: "team", component: Team},
   

@@ -64,7 +64,7 @@ let randomBall = function() {
           <img src="@/assets/images/tournament.png" alt="Tournament">
           </article>
           </RouterLink>
-          <RouterLink :to="{name: 'login'}">
+          <RouterLink :to="{name: 'teams'}">
           <article>
           <h3>Play with people</h3>
             <p>Connect with players in your area and build your own sports community.</p>

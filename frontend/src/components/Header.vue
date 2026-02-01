@@ -32,6 +32,8 @@ onMounted(() => {
         <RouterLink :to="{name: 'fields'}">Fields</RouterLink>
         <RouterLink :to="{name: 'tournaments'}">Tournaments</RouterLink>
         <RouterLink :to="{name: 'teams'}">Teams</RouterLink>
+        <RouterLink :to="{name: 'players'}">Players</RouterLink>
+        <RouterLink :to="{name: 'users'}">Users</RouterLink>
       </div>
 
       <div class="left">
@@ -51,6 +53,8 @@ onMounted(() => {
         <RouterLink :to="{name: 'fields'}">Fields</RouterLink>
         <RouterLink :to="{name: 'tournaments'}">Tournaments</RouterLink>
         <RouterLink :to="{name: 'teams'}">Teams</RouterLink>
+        <RouterLink :to="{name: 'players'}">Players</RouterLink>
+        <RouterLink :to="{name: 'users'}">Users</RouterLink>
 
         <hr />
 
@@ -59,7 +63,7 @@ onMounted(() => {
           <RouterLink :to="{name: 'signup'}">Signup</RouterLink>
         </div>
         <div v-else>
-        <RouterLink :to="{name: 'profile'}">{{ user }}</RouterLink>
+        <RouterLink :to="{name: 'profile'}">Profile</RouterLink>
         </div>
 
       </div>
