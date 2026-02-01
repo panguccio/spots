@@ -38,7 +38,6 @@ let randomBall = function() {
 
         <h1>SP<font-awesome-icon class="hero-icon" :icon="currentBall" @mouseenter="randomBall"/>TS</h1>
         <p class="subtitle">You pick a sport, we book a spot.</p>
-        <SearchBar :placeholder/>
 
       </div>
     </section>
