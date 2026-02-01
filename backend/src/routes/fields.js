@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
     if (query) {
-        filter = { $or: [{ name: { $regex: query, $options: "i" } }, { address: { $regex: query, $options: "i" } }] }
+        filter = { $or: [{ name: { $regex: query, $options: "i" } }, { address: { $regex: query, $options: "i" } }, { sport: { $regex: query, $options: "i" } }] }
     };
     const mongo = await db.connect();
     const fields = await mongo.collection("fields").find(filter).toArray();
@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
 // availability for a specific date (id) (query)
 router.get("/:id/slots", async (req, res) => {
     const date = req.query.q;
-    const { start, end } = getLimitTimes(date, "8:00", "21:00");
+    const { start, end } = getLimitTimes(date, "9:00", "22:00");
 
     const mongo = await db.connect();
     const filter = {

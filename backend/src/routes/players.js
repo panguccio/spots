@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
     if (query) {
-        filter = { name: { $regex: query, $options: "i" }, surname: { $regex: query, $options: "i" } };
+        filter = { $or: [{ name: { $regex: query, $options: "i" } }, { surname: { $regex: query, $options: "i" } }]  };
     }
     const mongo = await db.connect();
     const players = await mongo.collection("players").find(filter).toArray();
