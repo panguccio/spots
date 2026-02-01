@@ -24,11 +24,11 @@ const emit = defineEmits(['open'])
 </script>
 
 <template>
-
   <Error v-if="error" :error="error"/>
       <ul class="list">
-        <ListElement v-for="element in elementlist" :key="element._id" :name="name(element)" :info="info(element)" :icon="icon(element)" 
+        <ListElement v-if="elementlist.length != 0" v-for="element in elementlist" :key="element._id" :name="name(element)" :info="info(element)" :icon="icon(element)" 
           @open="$emit('open', element)"/>
+        <p v-else >Nothing here yet.</p>
       </ul>
 
 </template>
