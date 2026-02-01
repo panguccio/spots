@@ -17,13 +17,10 @@ import Field from "@/views/fields/Field.vue"
 // teams
 import PlayerList from "@/views/teams/PlayerList.vue"
 import TeamList from "@/views/teams/TeamList.vue"
-import TeamNew from "@/views/teams/TeamNew.vue"
 import Team from "@/views/teams/Team.vue"
-import TeamEdit from "@/views/teams/TeamEdit.vue"
 
 // tournaments
 import TournamentList from "@/views/tournaments/TournamentList.vue"
-import TournamentNew from "@/views/tournaments/TournamentNew.vue"
 import Tournament from "@/views/tournaments/Tournament.vue"
 import Match from "@/views/tournaments/Match.vue"
 
@@ -43,12 +40,9 @@ const routes = [
 
   { path: "/players", name: "playerlist", component: PlayerList},
   { path: "/teams", name: "teams", component: TeamList},
-  { path: "/teams/new", name: "teamnew", component: TeamNew},
   { path: "/teams/:id", name: "team", component: Team},
-  { path: "/teams/:id/edit", name: "teamedit", component: TeamEdit},
   
   { path: "/tournaments", name: "tournaments", component: TournamentList},
-  { path: "/tournaments/new", name: "tournamentnew", component: TournamentNew},
   { path: "/tournaments/:id", name: "tournament", component: Tournament},
   { path: "/matches/:id", name: "match", component: Match},
 ];

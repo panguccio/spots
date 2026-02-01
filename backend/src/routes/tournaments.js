@@ -91,7 +91,7 @@ router.post("/:id/matches/generate", verifyToken, async (req, res) => {
 
     for (let i = 0; i < teamIds.length; i++) {
         for (let j = i + 1; j < teamIds.length; j++) {
-            matches.push({ team1Id: teamIds[i], team2Id: teamIds[j], date: tournament.date, tournamentId: tournament._id, status: "upcoming", result: null });
+            matches.push({ team1Id: teamIds[i], team2Id: teamIds[j], date: tournament.date, tournamentId: tournament._id, status: "upcoming" });
         }
     }
     if (matches.length == 0) {

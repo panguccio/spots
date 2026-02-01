@@ -15,8 +15,8 @@ let loading = ref(true);
 const matchId = useRoute().params.id;
 const match = ref({})
 const error = ref(null);
-const name1 = ref("")
-const name2 = ref("")
+const team1 = ref("")
+const team2 = ref("")
 const organizer = ref({})
 let editing = ref(false)
 
@@ -34,10 +34,10 @@ async function getDetails() {
 async function getNames() {
   error.value = null;
   try {
-    const team1 = await teamDetails(match.value.team1Id);
-    const team2 = await teamDetails(match.value.team2Id);
-    name1.value = team1.name;
-    name2.value = team2.name;
+    const t1 = await teamDetails(match.value.team1Id);
+    const t2 = await teamDetails(match.value.team2Id);
+    team1.value = t1.name;
+    team2.value = t2.name;
   } catch (err) {
     error.value = err;
   }
@@ -69,16 +69,16 @@ onMounted(async () => {
       </div>
       <hr />
       <article v-if="!loading">
-       <MatchEdit v-if="editing" :match="match" @saved="loadPage(); editing = false" />
+       <MatchEdit v-if="editing" :match="match" :team1="team1" :team2="team2" @saved="loadPage(); editing = false" />
         <section class="element">
           <div class="match">
-            <span class="name">{{ name1 }}</span>
+            <span class="name">{{ team1 }}</span>
             <div v-if="match.points1 != undefined" class="points">{{ match.points1 }} - {{ match.points2 }}
             </div>
             <div v-else>
               <p class="points">VS</p>
             </div>
-            <span class="name">{{ name2 }}</span>
+            <span class="name">{{ team2 }}</span>
           </div>
           <div class="info">
             <p><strong>Date:</strong> {{ match.date.split('T')[0] }}</p>

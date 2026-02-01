@@ -36,15 +36,17 @@ defineProps({
     margin-bottom: 24px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    width: 100%;
 }
 
 
 .match {
     display: flex;
     flex-direction: column;
-    padding: 3px;
+    padding: 6px;
     background-color: white;
     border-bottom: 1px solid #e0e0e0;
+    width: 100%;
 }
 
 .match:hover {

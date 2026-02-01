@@ -1,12 +1,12 @@
 import { apiFetch } from './api'
-const name = "matches";
+const page = "matches";
 
 export function details(id) {
-    return apiFetch(`/${name}/${id}`, { method: 'GET' })
+    return apiFetch(`/${page}/${id}`, { method: 'GET' })
 }
 
-export function edit(points1, points2) {
-    return apiFetch(`/${name}/${id}`, {
+export function edit(id, points1, points2) {
+    return apiFetch(`/${page}/${id}/result`, {
         method: 'PUT',
         body: JSON.stringify({ points1, points2 })
     })
