@@ -70,7 +70,7 @@ let openTournament = function (tournament) {
           <h4>{{ user.name }}'s Tournaments</h4>
           <List :list="list" title="Tournaments" search="Search tournaments" :name="element => element.name"
             :info="element => element.date.split('T')[0]"
-            :icon="element => element.sport === 'football' ? 'futbol' : element.sport" @click="openTournament" />
+            :icon="element => element.sport === 'football' ? 'futbol' : element.sport" @open="openTournament" />
         </section>
         <slot />
       </article>
