@@ -13,8 +13,8 @@ const openTournament = function (tournament) {
 const newTournament = async function () {
     error.value = null;
     try {
-        const tournament = await create()
-        router.push(`/tournaments/${tournament._id}`)
+        const result = await create()
+        router.push(`/tournaments/${result.insertedId}`)
     } catch (err) {
         error.value = err;
     }
@@ -29,4 +29,9 @@ const newTournament = async function () {
         @pressed="newTournament" />
 </template>
 
-<style scoped></style>
+<style scoped>
+v::deep(.btn) {
+  height: 60px;
+  width: 60px;
+}
+</style>

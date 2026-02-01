@@ -13,7 +13,7 @@ const openUser = function (user) {
 </script>
 
 <template>
-    <ListPage :list="list" title="Players" search="Search players" :name="element => element.name + ' ' + element.surname"
+    <ListPage :list="list" title="Users" search="Search users" :name="element => element.name + ' ' + element.surname"
         :info="element => '@' + element.username"
         :icon="() => 'user'"
         @open="openUser" />
