@@ -81,7 +81,6 @@ onMounted(async () => { await loadPage() })
       <div class="buttons">
         <Button variant="danger" @pressed="cancel(tournament._id)"><font-awesome-icon class="icon"
             icon="trash" /></Button>
-        <Button variant="outline" @pressed="schedule(tournament._id)">New schedule*</Button>
         <Button @pressed="submit">Save</Button>
       </div>
     </form>
