@@ -5,8 +5,8 @@ function getLimitTimes(date, startHour, endHour) {
     const [sh, sm] = startHour.split(":");
     const [eh, em] = endHour.split(":");
 
-    start.setUTCHours(sh, sm, 0, 0);
-    end.setUTCHours(eh, em, 0, 0);
+    start.setHours(sh, sm, 0, 0);
+    end.setHours(eh, em, 0, 0);
     
     return { end, start };
 }

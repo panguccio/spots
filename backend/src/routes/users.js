@@ -33,6 +33,13 @@ router.get("/whoami", verifyToken, async (req, res) => {
     res.json(user);
 })
 
+router.get("/bookings", verifyToken, async (req, res) => {
+    const match = { userId: new ObjectId(req.user.id) };
+    const mongo = await db.connect();
+    const bookings = await mongo.collection("bookings").find(match).toArray();
+    res.json(bookings);
+})
+
 // details about a user (id)
 router.get("/:id", async (req, res) => {
     let user;

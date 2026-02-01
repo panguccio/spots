@@ -13,3 +13,7 @@ export function profile() {
 export function details(id) {
     return apiFetch(`/${name}/${id}`, { method: 'GET' })
 }
+
+export function bookings() {
+    return apiFetch(`/${name}/bookings`, { method: 'GET' })
+}

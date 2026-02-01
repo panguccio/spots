@@ -7,7 +7,7 @@ const props = defineProps({
         required: true
     }
 })
-const hours = ['9AM', '9:30AM', '10AM', '10:30AM', '11AM', '11:30AM', '12PM', '12:30PM', '1PM', '1:30PM', '2PM', '2:30PM', '3PM', '3:30PM', '4PM', '4:30PM', '5PM', '5:30PM', '6PM', '6:30PM', '7PM', '7:30PM', '8PM', '8:30PM', '9PM', '9:30PM', '10PM']
+const hours = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30AM', '12:00', '12:30', '13:00', '1:30', '14:00', '2:30', '15:00', '3:30', '16:00', '4:30', '17:00', '5:30', '18:00', '6:30', '19:00', '7:30', '20:00', '8:30', '21:00', '9:30', '22:00']
 
 function timeToIndex(isoTime) {
     const date = new Date(isoTime)
@@ -82,6 +82,8 @@ function isBooked(index) {
     margin: 0;
 }
 
+
+
 .time-slot-item:nth-of-type(2n) .time-label {
     visibility: hidden;
 }
@@ -94,6 +96,10 @@ function isBooked(index) {
     gap: 0;
     margin: 0;
     padding: 0;
+}
+
+.time-slot-item:nth-of-type(2n + 1) .separator {
+    height: 40px;
 }
 
 .separator {

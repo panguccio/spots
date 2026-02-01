@@ -40,6 +40,7 @@ defineProps({
   padding: 12px 16px;
   transition: background 0.2s;
   cursor: pointer;
+  z-index: 1000;
 }
 
 .list-element:hover {

@@ -31,14 +31,6 @@ async function getPlayers() {
   }
 }
 
-async function loadPage() {
-  loading.value = true;
-  await getDetails();
-  await getPlayers();
-  await getUserName();
-  loading.value = false;
-}
-
 async function getUserName() {
   const id = team.value.organizerId;
   if (!id) return
@@ -47,6 +39,14 @@ async function getUserName() {
   } catch (err) {
     error.value = err;
   }
+}
+
+async function loadPage() {
+  loading.value = true;
+  await getDetails();
+  await getPlayers();
+  await getUserName();
+  loading.value = false;
 }
 
 onMounted(async () => {
