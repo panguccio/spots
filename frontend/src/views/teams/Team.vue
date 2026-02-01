@@ -71,7 +71,7 @@ onMounted(async () => {
       </div>
       <hr />
       <article v-if="!loading">
-      <TeamEdit v-if="editing" :team="team" @saved="loadPage(); editing = false" />
+      <TeamEdit v-if="editing" :team="team" :teamPlayers="playerList" @saved="loadPage(); editing = false" />
         <section class="element">
           <h3>{{ team.name }}</h3>
           <div class="info">

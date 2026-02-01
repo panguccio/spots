@@ -40,41 +40,38 @@ router.get("/:id", async (req, res) => {
 
 // edit team (id) (auth)
 router.put("/:id", verifyToken, async (req, res) => {
-    // assuming date comes as: YYYY-MM-DD
     const { name, addPlayers, remPlayers } = req.body;
-
-    let result;
     const mongo = await db.connect();
 
-    const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
-    let updateDocument = {};
+    const filter = {
+        _id: new ObjectId(req.params.id),
+        organizerId: new ObjectId(req.user.id)
+    };
 
-    if (name) {
-        updateDocument.$set = {};
-        updateDocument.$set.name = name;
+    let updateSet = {};
+    if (name) updateSet.name = name;
+
+    if (Object.keys(updateSet).length > 0) {
+        await mongo.collection("teams").updateOne(filter, { $set: updateSet });
     }
 
-    if (addPlayers && Array.isArray(addPlayers)) {
-        let playersIds = addPlayers.map(id => new ObjectId(id));
-        updateDocument.$addToSet = { playersIds: { $each: playersIds } };
+    if (addPlayers && Array.isArray(addPlayers) && addPlayers.length > 0) {
+        const addIds = addPlayers.map(id => new ObjectId(id));
+        await mongo.collection("teams").updateOne(filter, {
+            $addToSet: { playersIds: { $each: addIds } }
+        });
     }
 
-    if (remPlayers && Array.isArray(remPlayers)) {
-        let playersIds = remPlayers.map(id => new ObjectId(id));
-        updateDocument.$pull = { playersIds: { $in: playersIds } };
+    if (remPlayers && Array.isArray(remPlayers) && remPlayers.length > 0) {
+        const remIds = remPlayers.map(id => new ObjectId(id));
+        await mongo.collection("teams").updateOne(filter, {
+            $pull: { playersIds: { $in: remIds } }
+        });
     }
 
-    if (Object.keys(updateDocument).length === 0) {
-        return res.status(400).json({ message: "Failed to edit team: Empty fields." });
-    }
-
-    result = await mongo.collection("teams").updateOne(filter, updateDocument);
-    if (result.matchedCount === 0) {
-        return res.status(404).json({ message: "Failed to edit team: User not authorized (or invalid teams id)." });
-    }
-
-    res.status(200).json(result);
+    res.status(201).json({ message: "Team updated successfully" });
 });
+
 
 // cancel the team (id) (auth)
 router.delete("/:id", verifyToken, async (req, res) => {

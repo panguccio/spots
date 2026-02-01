@@ -1,9 +1,9 @@
 import { apiFetch } from './api'
-const name = "teams";
+const page = "teams";
 
 export function list(searchTerm = '') {
     const query = searchTerm ? `?q=${encodeURIComponent(searchTerm)}` : ''
-    return apiFetch(`/${name}/${query}`, { method: 'GET' })
+    return apiFetch(`/${page}/${query}`, { method: 'GET' })
 }
 
 export function create(name) {
@@ -14,23 +14,26 @@ export function create(name) {
 }
 
 export function details(id) {
-    return apiFetch(`/${name}/${id}`, { method: 'GET' })
+    return apiFetch(`/${page}/${id}`, { method: 'GET' })
 }
 
-export function edit(name, addPlayers, remPlayers) {
-    return apiFetch(`/${name}/${id}`, {
+export function edit(id, name, addPlayers, remPlayers) {
+    return apiFetch(`/${page}/${id}`, {
         method: 'PUT',
-        body: JSON.stringify({ name, sport, maxTeams, date, addTeams, remTeams })
+        body: JSON.stringify({ name, addPlayers, remPlayers })
     })
 }
 
 export function cancel(id) {
-    return apiFetch(`/${name}/${id}`, { method: 'DELETE' })
+    return apiFetch(`/${page}/${id}`, { method: 'DELETE' })
 }
 
 
 export function players(id) {
-    return apiFetch(`/${name}/${id}/players`, { method: 'GET' })
+    return apiFetch(`/${page}/${id}/players`, { method: 'GET' })
 }
 
+export function listPlayers() {
+    return apiFetch(`/players`, { method: 'GET' })
+}
 

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db.js");
 
-// list of teams (query)
+// list of players (query)
 router.get("/", async (req, res) => {
     const query = req.query.q;
     let filter = {};
