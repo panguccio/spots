@@ -33,7 +33,8 @@ export function players(id) {
     return apiFetch(`/${page}/${id}/players`, { method: 'GET' })
 }
 
-export function listPlayers() {
-    return apiFetch(`/players`, { method: 'GET' })
+export function listPlayers(searchTerm = '') {
+    const query = searchTerm ? `?q=${encodeURIComponent(searchTerm)}` : ''
+    return apiFetch(`/players/${query}`, { method: 'GET' })
 }
 
