@@ -11,7 +11,7 @@ const error = ref(null);
 <template>
     <ListPage :list="list" title="Players" search="Search players" :name="element => element.name + ' ' + element.surname"
         :info="element => element.jerseyNumber"
-        :icon="element => 'user'"
+        :icon="() => 'user'"
         @pressed="newTournament" />
 </template>
 
