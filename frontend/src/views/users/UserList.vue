@@ -20,4 +20,7 @@ const openUser = function (user) {
 </template>
 
 <style scoped>
+:deep(.create-button) {
+    display: none;
+}
 </style>
