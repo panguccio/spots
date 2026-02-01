@@ -7,7 +7,7 @@ export function list(searchTerm = '') {
 }
 
 export function create(name) {
-    return apiFetch(`/${name}`, {
+    return apiFetch(`/${page}`, {
         method: 'POST',
         body: JSON.stringify({ name })
     })
@@ -36,5 +36,12 @@ export function players(id) {
 export function listPlayers(searchTerm = '') {
     const query = searchTerm ? `?q=${encodeURIComponent(searchTerm)}` : ''
     return apiFetch(`/players/${query}`, { method: 'GET' })
+}
+
+export function createPlayer(name, surname, jerseyNumber) {
+    return apiFetch(`/players`, {
+        method: 'POST',
+        body: JSON.stringify({ name, surname, jerseyNumber })
+    })
 }
 

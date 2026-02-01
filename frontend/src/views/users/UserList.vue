@@ -19,4 +19,5 @@ const openUser = function (user) {
         @open="openUser" />
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

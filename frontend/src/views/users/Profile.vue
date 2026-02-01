@@ -76,7 +76,7 @@ let exit = async function() {
             <span class="delete"><Button variant="danger" @click="deleteBooking(b)"><font-awesome-icon class="icon" icon="trash"/></Button></span>
           </li>
         </ul>
-        <p v-if="!myBookings.length">No bookings yet.</p>
+        <p v-if="!myBookings.length">No bookings yet</p>
       </section>
       <section class="logout">
       <span class="logout-button"><Button variant="danger" @click="exit">Logout</Button></span>
@@ -105,7 +105,6 @@ h4 {
 .bookings {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .booking-list {

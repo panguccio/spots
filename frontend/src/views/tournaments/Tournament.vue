@@ -122,12 +122,12 @@ onMounted(async () => { await loadPage() })
         <section class="schedule">
           <h3>Matches Schedule</h3>
           <Schedule v-if="schedule.length !== 0" :schedule="schedule" :teamsNames="teamsNames" />
-          <p v-else>No teams yet.</p>
+          <p v-else>To generate matches, click <kbd> <samp>Edit</samp> &rightarrow; <samp>New Schedule</samp></kbd></p>
         </section>
         <section class="standings">
           <h3>Standings</h3>
           <Standings v-if="standingsStats.length !== 0" :standingsStats :teamsNames />
-          <p v-else>No games yet.</p>
+          <p v-else>No games yet</p>
         </section>
       </article>
       <div v-else>
@@ -237,6 +237,13 @@ section {
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+p kbd,
+p samp {
+  background: white;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.9em;
 }
 
 .time-input {

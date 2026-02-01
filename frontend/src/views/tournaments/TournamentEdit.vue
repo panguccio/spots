@@ -29,29 +29,13 @@ async function teams() {
 }
 
 const form = ref({
-  name: '',
-  sport: '',
-  maxTeams: 0,
-  date: '',
+  name: props.tournament.name,
+  sport: props.tournament.sport,
+  maxTeams: props.tournament.maxTeams,
+  date: props.tournament.date.split('T')[0],
   addTeams: [],
   remTeams: []
 })
-
-async function initForm() {
-  if (!props.tournament || !Object.keys(props.tournament).length) return
-
-  form.value = {
-    name: props.tournament.name,
-    sport: props.tournament.sport,
-    maxTeams: props.tournament.maxTeams,
-    date: props.tournament.date.split('T')[0],
-    addTeams: [],
-    remTeams: []
-  }
-
-  teamsInTournament.value = allTeams.value.filter(t => props.tournament.teamsIds.includes(t._id))
-  teamsNotInTournament.value = allTeams.value.filter(t => !props.tournament.teamsIds.includes(t._id))
-}
 
 
 function submit() {
@@ -79,7 +63,8 @@ function submit() {
 async function loadPage() {
   loading.value = true;
   await teams();
-  await initForm();
+  teamsInTournament.value = allTeams.value.filter(t => props.tournament.teamsIds.includes(t._id))
+  teamsNotInTournament.value = allTeams.value.filter(t => !props.tournament.teamsIds.includes(t._id))
   loading.value = false;
 }
 
@@ -93,7 +78,7 @@ onMounted(async () => { await loadPage() })
     <Error v-if="error" :error="error" />
     <h3>Edit tournament</h3>
     <form @submit.prevent="submit">
-      <label>Name: <input id="tournament-name" type="text" v-model="form.name"></label>
+      <label>Name: <input id="tournament-name" type="text" v-model="form.name" ></label>
       <label>Sport: <select id="tournament-sport" v-model="form.sport">
           <option value="volleyball">Volleyball</option>
           <option value="football">Football</option>

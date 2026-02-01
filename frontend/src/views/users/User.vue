@@ -17,6 +17,7 @@ let loading = ref(true);
 const user = ref(props.user || null)
 const userId = useRoute().params.id;
 const error = ref(null);
+const tournaments = ref([]);
 
 async function getDetails() {
   if (userId != undefined) {
@@ -30,18 +31,17 @@ async function getDetails() {
 
 }
 
-async function list() {
-  let tournaments = []
+async function getTournaments() {
   for (const tournamentId of user.value.tournamentsIds) {
     const tournament = await tournamentDetails(tournamentId)
-    tournaments.push(tournament);
+    tournaments.value.push(tournament);
   }
-  return tournaments;
 }
 
 async function loadPage() {
   loading.value = true;
   await getDetails();
+  await getTournaments();
   loading.value = false;
 }
 
@@ -52,7 +52,6 @@ onMounted(async () => {
 let openTournament = function (tournament) {
   router.push(`/tournaments/${tournament._id}`)
 }
-
 
 </script>
 
@@ -68,7 +67,7 @@ let openTournament = function (tournament) {
         </section>
         <section class="tournaments">
           <h4>{{ user.name }}'s Tournaments</h4>
-          <List :list="list" :name="element => element.name"
+          <List :elementlist="tournaments" :search="false" :name="element => element.name"
             :info="element => element.date.split('T')[0]"
             :icon="element => element.sport === 'football' ? 'futbol' : element.sport" @open="openTournament" />
         </section>
