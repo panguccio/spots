@@ -94,7 +94,9 @@ router.post("/:id/matches/generate", verifyToken, async (req, res) => {
             matches.push({ team1Id: teamIds[i], team2Id: teamIds[j], date: tournament.date, tournamentId: tournament._id, status: "upcoming", result: null });
         }
     }
-
+    if (matches.length == 0) {
+        res.status(201).json(matches);
+    }
     const result = await mongo.collection("matches").insertMany(matches);
     await mongo.collection("tournaments").updateOne(filter, { $push: { matchesIds: { $each: Object.values(result.insertedIds) } } });
     res.status(201).json(matches);

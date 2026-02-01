@@ -1,28 +1,35 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { details } from "@/services/matches.js";
+import { details as tournamentDetails } from '@/services/tournaments.js';
+import { details as userDetails } from '@/services/users.js';
 import { useRoute } from "vue-router";
 import { details as teamDetails } from '@/services/teams.js'
-
+import { useAuthStore } from '@/store/auth.js'
 import Error from "@/components/Error.vue";
+import Button from '@/components/Button.vue';
+import MatchEdit from '@/views/tournaments/MatchEdit.vue';
 
+const { user } = useAuthStore()
 let loading = ref(true);
 const matchId = useRoute().params.id;
 const match = ref({})
 const error = ref(null);
 const name1 = ref("")
 const name2 = ref("")
+const organizer = ref({})
+let editing = ref(false)
 
 async function getDetails() {
   error.value = null;
   try {
     match.value = await details(matchId);
+    const tournament = await tournamentDetails(match.value.tournamentId);
+    organizer.value = await userDetails(tournament.organizerId);
   } catch (err) {
     error.value = err;
   }
 }
-
-
 
 async function getNames() {
   error.value = null;
@@ -52,16 +59,24 @@ onMounted(async () => {
 <template>
   <div class="team-content">
     <div class="element-card">
-      <h2>Team Details</h2>
+      <div class="top">
+        <h2>Match details</h2>
+        <div v-if="user == organizer.username">
+          <Button class="edit-button" @pressed="editing = !editing">
+            {{ editing ? 'Cancel' : 'Edit' }}
+          </Button>
+        </div>
+      </div>
       <hr />
       <article v-if="!loading">
+       <MatchEdit v-if="editing" :match="match" @saved="loadPage(); editing = false" />
         <section class="element">
           <div class="match">
             <span class="name">{{ name1 }}</span>
             <div v-if="match.points1 != undefined" class="points">{{ match.points1 }} - {{ match.points2 }}
             </div>
             <div v-else>
-              <p>VS</p>
+              <p class="points">VS</p>
             </div>
             <span class="name">{{ name2 }}</span>
           </div>
@@ -126,6 +141,12 @@ article {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 hr {

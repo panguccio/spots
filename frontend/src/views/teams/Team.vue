@@ -3,15 +3,19 @@ import { onMounted, ref } from "vue";
 import { details, players } from "@/services/teams.js";
 import { details as userDetails } from "@/services/users.js";
 import { useRoute } from "vue-router";
-
+import Button from '@/components/Button.vue';
+import TeamEdit from '@/views/teams/TeamEdit.vue';
 import Error from "@/components/Error.vue";
+import { useAuthStore } from '@/store/auth.js';
 
+const { user } = useAuthStore()
 let loading = ref(true);
 const teamId = useRoute().params.id;
 const team = ref({});
 const playerList = ref([]);
 const error = ref(null);
-const user = ref({});
+const organizer = ref({});
+let editing = ref(false)
 
 async function getDetails() {
   error.value = null;
@@ -35,7 +39,7 @@ async function getUserName() {
   const id = team.value.organizerId;
   if (!id) return
   try {
-    user.value = await userDetails(id);
+    organizer.value = await userDetails(id);
   } catch (err) {
     error.value = err;
   }
@@ -57,13 +61,21 @@ onMounted(async () => {
 <template>
   <div class="team-content">
     <div class="element-card">
-      <h2>Team Details</h2>
+      <div class="top">
+        <h2>Team details</h2>
+        <div v-if="user == organizer.username">
+          <Button class="edit-button" @pressed="editing = !editing">
+            {{ editing ? 'Cancel' : 'Edit' }}
+          </Button>
+        </div>
+      </div>
       <hr />
       <article v-if="!loading">
+      <TeamEdit v-if="editing" :team="team" @saved="loadPage(); editing = false" />
         <section class="element">
           <h3>{{ team.name }}</h3>
           <div class="info">
-            <p><RouterLink :to="`/users/${user._id}`"><strong>Organizer:</strong> {{ user.name }} {{ user.surname }}</RouterLink></p>
+            <p><RouterLink :to="`/users/${organizer._id}`"><strong>Organizer:</strong> {{ organizer.name }} {{ organizer.surname }}</RouterLink></p>
           </div>
         </section>
         <section class="players">
@@ -111,7 +123,11 @@ p {
   color: #1e3c2f;
   margin: 0;
 }
-
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
 article {
   display: flex;
   flex-direction: column;

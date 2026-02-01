@@ -18,7 +18,7 @@ let loading = ref(true)
 const tournamentId = useRoute().params.id
 const tournament = ref({})
 const schedule = ref([])
-const standingsStats = ref({})
+const standingsStats = ref([])
 const error = ref(null)
 const teamsNames = ref({});
 const organizer = ref({})
@@ -77,7 +77,6 @@ async function getUserName() {
 }
 
 async function loadPage() {
-  editing = false
   loading.value = true;
   await getDetails();
   await getStandings();
@@ -106,7 +105,7 @@ onMounted(async () => { await loadPage() })
       <hr />
       <article v-if="!loading">
 
-        <TournamentEdit v-if="editing" :tournament="tournament" @saved="loadPage()" />
+        <TournamentEdit v-if="editing" :tournament="tournament" @saved="loadPage(); editing = false" />
 
         <section class="element">
           <h3>{{ tournament.name }}</h3>
@@ -122,11 +121,13 @@ onMounted(async () => { await loadPage() })
         </section>
         <section class="schedule">
           <h3>Matches Schedule</h3>
-          <Schedule :schedule="schedule" :teamsNames="teamsNames" />
+          <Schedule v-if="schedule.length !== 0" :schedule="schedule" :teamsNames="teamsNames" />
+          <p v-else>No teams yet.</p>
         </section>
         <section class="standings">
           <h3>Standings</h3>
-          <Standings :standingsStats :teamsNames />
+          <Standings v-if="standingsStats.length !== 0" :standingsStats :teamsNames />
+          <p v-else>No games yet.</p>
         </section>
       </article>
       <div v-else>

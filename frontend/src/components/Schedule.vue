@@ -20,7 +20,7 @@ defineProps({
                     <div v-if="match.points1 != undefined" class="points">{{ match.points1 }} - {{ match.points2 }}
                     </div>
                     <div v-else>
-                        <p>VS</p>
+                        <p class="points">VS</p>
                     </div>
                     <span class="name">{{ teamsNames[match.team2Id] }}</span>
                 </div>
