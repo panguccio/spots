@@ -5,7 +5,6 @@ import SearchBar from '@/components/SearchBar.vue'
 import ListElement from '@/components/ListElement.vue'
 import Error from '@/components/Error.vue'
 
-const elementlist = ref([])
 const searchTerm = ref('')
 const error = ref(null)
 
@@ -16,25 +15,11 @@ const props = defineProps({
     name: Function,
     info: Function,
     icon: Function,
+    elementlist: { type: Array, default: [] }
 })
 
 const emit = defineEmits(['open'])
 
-async function fetch(term = '') {
-  error.value = null
-  try {
-    elementlist.value = await props.list(term)
-  } catch (err) {
-    error.value = err;
-  }
-}
-
-// Carica i campi all'inizio
-onMounted(() => fetch())
-
-watch(searchTerm, (newTerm) => {
-  fetch(newTerm)
-})
 
 </script>
 

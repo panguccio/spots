@@ -29,7 +29,6 @@ async function fetch(term = '') {
   }
 }
 
-// Carica i campi all'inizio
 onMounted(() => fetch())
 
 watch(searchTerm, (newTerm) => {
@@ -43,7 +42,7 @@ watch(searchTerm, (newTerm) => {
     <h2>{{ title }}</h2>
     <div class="search-container">
       <div class="top"> <Button @pressed="$emit('pressed')">+</Button> <SearchBar class="searchbar" v-model="searchTerm" :placeholder="search" /> </div>
-      <div class="list"> <List :list :title :name :info :icon @open="$emit('open', $event)" /> </div>
+      <div class="list"> <List :elementlist="elementlist" :list :title :name :info :icon @open="$emit('open', $event)" /> </div>
     </div>
   </div>
 </template>
