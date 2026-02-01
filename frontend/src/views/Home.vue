@@ -3,6 +3,9 @@ import SearchBar from '@/components/SearchBar.vue';
 import { ref } from 'vue';
 import { computed } from 'vue'
 import { useWindowSize } from '@vueuse/core'
+import Button from '@/components/Button.vue'
+import { useAuthStore } from '@/store/auth.js'
+const { user } = useAuthStore()
 
 const { width } = useWindowSize()
 
@@ -38,6 +41,8 @@ let randomBall = function() {
 
         <h1>SP<font-awesome-icon class="hero-icon" :icon="currentBall" @mouseenter="randomBall"/>TS</h1>
         <p class="subtitle">You pick a sport, we book a spot.</p>
+        <RouterLink v-if="!user" :to="{name: 'signup'}"> <Button> Get started </Button> </RouterLink>
+        <RouterLink v-else :to="{name: 'profile'}"> <Button> Welcome back! </Button> </RouterLink>
 
       </div>
     </section>
@@ -45,18 +50,27 @@ let randomBall = function() {
       <div class="features-content">
         <h2>Why choose Spots?</h2>
         <div class="features-grid">
+          <RouterLink :to="{name: 'fields'}">
           <article>
+            <h3>Find new fields</h3>
             <p>Find and book the perfect sports field for your next game or practice session.</p>
             <img src="@/assets/images/field.jpg" alt="Sports Field">
           </article>
+          </RouterLink>
+          <RouterLink :to="{name: 'tournaments'}">
           <article>
+          <h3>Create tournaments</h3>
             <p>Discover local tournaments and join teams to compete and have fun.</p>
           <img src="@/assets/images/tournament.png" alt="Tournament">
           </article>
+          </RouterLink>
+          <RouterLink :to="{name: 'login'}">
           <article>
+          <h3>Play with people</h3>
             <p>Connect with players in your area and build your own sports community.</p>
             <img src="@/assets/images/players.jpg" alt="Players">
           </article>
+          </RouterLink>
         </div>
       </div>
     </section>
@@ -150,6 +164,16 @@ article {
   border-bottom: #c2993e 7px solid;
   background-color: white;
   max-width: 400px;
+}
+
+article:hover {
+  background: #f9fbe7;
+}
+
+h3 {
+  color: #1e3c2f;
+  font-size: 24px;
+  text-align: center;
 }
 
 article p {

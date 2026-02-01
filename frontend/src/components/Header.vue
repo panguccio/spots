@@ -40,12 +40,8 @@ onMounted(() => {
           <RouterLink :to="{name: 'signup'}">Signup</RouterLink>
         </div>
         <div v-else class="auth">
-        <RouterLink :to="{name: 'profile'}">{{ user }}</RouterLink>
-        </div>
-
-
-        <div class="search" @click="searching = true">
-          <span class="material-symbols-outlined search-icon">search</span>
+        <RouterLink :to="{name: 'profile'}">{{ user }} <font-awesome-icon class="icon" icon="user"/></RouterLink>
+        
         </div>
 
       </div>
@@ -58,21 +54,16 @@ onMounted(() => {
 
         <hr />
 
-        <div v-if="!user" class="auth">
+        <div v-if="!user" class="mobile-auth">
           <RouterLink :to="{name: 'login'}">Login</RouterLink>
           <RouterLink :to="{name: 'signup'}">Signup</RouterLink>
         </div>
-        <div v-else class="auth">
+        <div v-else>
         <RouterLink :to="{name: 'profile'}">{{ user }}</RouterLink>
         </div>
 
       </div>
     </nav>
-    <div v-else class="search-overlay" @click.self="searching = false">
-        <div class="search-wrapper">
-          <SearchBar placeholder="Search anything"/>
-        </div>
-  </div>
   </div>
   
 </template>
@@ -116,7 +107,8 @@ nav {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
-  width: max-content
+  width: max-content;
+  align-items: center;
 }
 
 
@@ -126,11 +118,6 @@ nav {
   font-size: 22px;
 }
 
-.search-icon {
-  color: white;
-  font-size: 20px;
-  opacity: .8;
-}
 
 .hamburger {
   display: none;
@@ -157,25 +144,10 @@ nav {
   background: white;
 }
 
-.search-wrapper {
-  width: 100%;
-  max-width: 700px;
-  height: 64px;
+.mobile-auth {
   display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-
-.search-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.25);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  z-index: 9999;
+  flex-direction: column;
+  gap: 16px;
 }
 
 a {

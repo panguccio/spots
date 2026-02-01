@@ -15,6 +15,7 @@ const model = defineModel()
         <div class="search">
           <span class="material-symbols-outlined search-icon">search</span>
           <input
+            id="searchbar"
             class="search-input"
             type="text"
             :placeholder="placeholder"
