@@ -1,6 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import List from '@/components/List.vue'
 import Button from '@/components/Button.vue'
@@ -42,7 +41,7 @@ watch(searchTerm, (newTerm) => {
     <h2>{{ title }}</h2>
     <div class="search-container">
       <div class="top"> <Button @pressed="$emit('pressed')">+</Button> <SearchBar class="searchbar" v-model="searchTerm" :placeholder="search" /> </div>
-      <div class="list"> <List :elementlist="elementlist" :list :title :name :info :icon @open="$emit('open', $event)" /> </div>
+      <div class="list"> <List :elementlist="elementlist" :title :name :info :icon @open="$emit('open', $event)" /> </div>
     </div>
   </div>
 </template>

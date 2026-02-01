@@ -10,8 +10,6 @@ const error = ref(null)
 
 const props = defineProps({
     title: { type: String, default: 'List' },
-    list: { type: Function, required: true },
-    search: String,
     name: Function,
     info: Function,
     icon: Function,
@@ -20,15 +18,14 @@ const props = defineProps({
 
 const emit = defineEmits(['open'])
 
-
 </script>
 
 <template>
   <Error v-if="error" :error="error"/>
       <ul class="list">
-        <ListElement v-if="elementlist.length != 0" v-for="element in elementlist" :key="element._id" :name="name(element)" :info="info(element)" :icon="icon(element)" 
+        <ListElement v-for="element in elementlist" :key="element._id" :name="name(element)" :info="info(element)" :icon="icon(element)" 
           @open="$emit('open', element)"/>
-        <p v-else >Nothing here yet.</p>
+        <p v-if="elementlist.length == 0"  >Nothing here yet</p>
       </ul>
 
 </template>
@@ -56,22 +53,6 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.search-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 400px;
-}
-
-@media screen and (max-width: 400px) {
-  .search-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: auto;
-}
 }
 
 </style>

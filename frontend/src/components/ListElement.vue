@@ -13,8 +13,8 @@ const emit = defineEmits(['open'])
       <font-awesome-icon class="icon" :icon="icon"/>
     </div>
     <div class="info">
-      <h3>{{ name }}</h3>
-      <p>{{ info }}</p>
+      <h3 class="primary">{{ name }}</h3>
+      <p class="secondary">{{ info }}</p>
     </div>
   </div>
 </template>
