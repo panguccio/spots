@@ -16,6 +16,7 @@ const emit = defineEmits(['saved'])
 
 const props = defineProps({
   tournament: { type: Object, default: {} }
+  // check teams in tournaments c'è forse in tournament
 });
 
 async function teams() {
@@ -72,7 +73,6 @@ function submit() {
     emit('saved')
   }).catch(err => {
     console.error(err)
-    alert('Error updating tournament')
   })
 }
 
@@ -85,8 +85,6 @@ async function loadPage() {
 
 onMounted(async () => { await loadPage() })
 
-
-
 </script>
 
 <template>
@@ -95,21 +93,21 @@ onMounted(async () => { await loadPage() })
     <Error v-if="error" :error="error" />
     <h3>Edit tournament</h3>
     <form @submit.prevent="submit">
-      <label>Name: <input type="text" v-model="form.name"></label>
-      <label>Sport: <select v-model="form.sport">
+      <label>Name: <input id="tournament-name" type="text" v-model="form.name"></label>
+      <label>Sport: <select id="tournament-sport" v-model="form.sport">
           <option value="volleyball">Volleyball</option>
           <option value="football">Football</option>
           <option value="basketball">Basketball</option>
         </select></label>
-      <label>Date: <input type="date" v-model="form.date"></label>
+      <label>Date: <input id="tournament-date" type="date" v-model="form.date"></label>
 
-      <label>Max teams: <input type="number" v-model="form.maxTeams" min="2"> </label>
+      <label>Max teams: <input id="tournament-teams-number" type="number" v-model="form.maxTeams" min="2"> </label>
       <label>Add teams:
-        <Multiselect class="multiselect" v-model="form.addTeams" :options="teamsNotInTournament" label="name" track-by="_id"
+        <Multiselect class="multiselect" id="tournament-add-teams" v-model="form.addTeams" :options="teamsNotInTournament" label="name" track-by="_id"
           placeholder="Select teams" :multiple="true" :searchable="true" />
       </label>
       <label>Remove teams:
-        <Multiselect class="multiselect" v-model="form.remTeams" :options="teamsInTournament" label="name" track-by="_id"
+        <Multiselect class="multiselect" id="tournament-rem-teams" v-model="form.remTeams" :options="teamsInTournament" label="name" track-by="_id"
           placeholder="Select teams" :multiple="true" :searchable="true" />
       </label>
       <div class="buttons">

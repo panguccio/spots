@@ -40,10 +40,10 @@ function submit() {
   <section class="edit-card">
     <Error v-if="error" :error="error" />
     <h3>Enter results</h3>
-    <form @submit.prevent="submit">
+    <form  @submit.prevent="submit">
       <div class="points">
-      <label>Points of {{ team1 }}: <input type="number" v-model="form.points1" min="0"> </label>
-      <label>Points of {{ team2 }}: <input type="number" v-model="form.points2" min="0"> </label>
+      <label >Points of {{ team1 }}: <input id="team1-points" type="number" v-model="form.points1" min="0"> </label>
+      <label >Points of {{ team2 }}: <input id="team2-points" type="number" v-model="form.points2" min="0"> </label>
       </div>
       <div class="buttons">
       <Button @pressed="submit">Save</Button>
