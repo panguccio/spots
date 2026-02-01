@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import List from '@/components/List.vue'
+import Button from '@/components/Button.vue'
 
 const elementlist = ref([])
 const searchTerm = ref('')
@@ -17,7 +18,7 @@ const props = defineProps({
     icon: Function,
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(['click', 'pressed'])
 
 async function fetch(term = '') {
   error.value = null
@@ -41,8 +42,8 @@ watch(searchTerm, (newTerm) => {
   <div class="list-page">
     <h2>{{ title }}</h2>
     <div class="search-container">
-      <div class="top"><SearchBar v-model="searchTerm" :placeholder="search" /> </div>
-      <div class="list"> <List :list :title :name :info :icon @click="$emit('click', $event)" /> </div>
+      <div class="top"> <Button @pressed="$emit('pressed')">+</Button> <SearchBar class="searchbar" v-model="searchTerm" :placeholder="search" /> </div>
+      <div class="list"> <List :list :title :name :info :icon @open="$emit('open', $event)" /> </div>
     </div>
   </div>
 </template>
@@ -55,9 +56,20 @@ h2 {
   font-size: 35px;
 }
 
+.top {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  align-items: center;
+  margin: auto;
+}
+
+.searcbar {
+  flex: 1;
+}
 
 .list-page {
-  max-width: 900px;
+  max-width: 700px;
   margin: 0 auto;
   padding: 24px;
   display: flex;

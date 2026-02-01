@@ -6,11 +6,8 @@ export function list(searchTerm = '') {
     return apiFetch(`/${page}/${query}`, { method: 'GET' })
 }
 
-export function create(name, sport, maxTeams, date) {
-    return apiFetch(`/${name}`, {
-        method: 'POST',
-        body: JSON.stringify({ name, sport, maxTeams, date })
-    })
+export function create() {
+    return apiFetch(`/${page}`, { method: 'POST' })
 }
 
 export function details(id) {

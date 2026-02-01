@@ -21,12 +21,8 @@ router.get("/", async (req, res) => {
 
 // create new tournament (auth)
 router.post("/", verifyToken, async (req, res) => {
-    const { name, sport, maxTeams, date } = req.body;
-    if (!name || !sport || !maxTeams || !date) {
-        return res.status(400).json({ message: "Missing fields."});
-    }
     const mongo = await db.connect();
-    const tournament = { name, sport, maxTeams, status: "active", date: new Date(date), organizerId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
+    const tournament = { name: "New Tournament", sport: "football", maxTeams: 2, status: "active", date: new Date(), organizerId: new ObjectId(req.user.id), matchesIds: [], teamsIds: [] }
     const result = await mongo.collection("tournaments").insertOne(tournament)
     res.status(201).json(result);
 })

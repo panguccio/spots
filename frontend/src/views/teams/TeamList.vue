@@ -16,7 +16,7 @@ let openTeam = function(team) {
         :name="element => element.name" 
         :info="element => (element.playersIds ? element.playersIds.length : 0)  + ' players'" 
         :icon="() => 'users'" 
-        @click="openTeam" />
+        @open="openTeam" />
 </template>
 
 <style scoped>

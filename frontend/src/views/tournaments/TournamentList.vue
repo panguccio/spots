@@ -1,23 +1,34 @@
 <script setup>
-import { list } from '@/services/tournaments.js'
+import { ref } from 'vue'
+import { list, create } from '@/services/tournaments.js'
 import ListPage from '@/components/ListPage.vue'
 import router from '@/router'
 
-let openTournament = function(tournament) {
+const error = ref(null);
+
+const openTournament = function (tournament) {
     router.push(`/tournaments/${tournament._id}`)
+}
+
+const newTournament = async function () {
+    console.log("ciao")
+     console.log("ciao")
+    error.value = null;
+    try {
+        const tournament = await create()
+        router.push(`/tournaments/${tournament._id}`)
+    } catch (err) {
+        error.value = err;
+    }
 }
 
 </script>
 
 <template>
-  <ListPage :list="list" 
-        title="Tournaments" 
-        search="Search tournaments" 
-        :name="element => element.name" 
-        :info="element => element.date.split('T')[0]" 
-        :icon="element => element.sport === 'football' ? 'futbol' : element.sport"
-        @click="openTournament"  />
+    <ListPage :list="list" title="Tournaments" search="Search tournaments" :name="element => element.name"
+        :info="element => element.date.split('T')[0]"
+        :icon="element => element.sport === 'football' ? 'futbol' : element.sport" @open="openTournament"
+        @pressed="newTournament" />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

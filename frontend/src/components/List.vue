@@ -18,7 +18,7 @@ const props = defineProps({
     icon: Function,
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(['open'])
 
 async function fetch(term = '') {
   error.value = null
@@ -43,7 +43,7 @@ watch(searchTerm, (newTerm) => {
   <Error v-if="error" :error="error"/>
       <ul class="list">
         <ListElement v-for="element in elementlist" :key="element._id" :name="name(element)" :info="info(element)" :icon="icon(element)" 
-          @click="$emit('click', element)"/>
+          @open="$emit('open', element)"/>
       </ul>
 
 </template>

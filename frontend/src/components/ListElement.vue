@@ -4,11 +4,11 @@ defineProps({
   info: String,
   icon: String
 })
-
+const emit = defineEmits(['open'])
 </script>
 
 <template>
-  <div class="list-element" @click="$emit('click')">
+  <div class="list-element" @click="$emit('open')">
     <div class="box">
       <font-awesome-icon class="icon" :icon="icon"/>
     </div>

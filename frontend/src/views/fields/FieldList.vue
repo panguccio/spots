@@ -16,7 +16,7 @@ let openField = function(field) {
         search="Search fields" 
         :info="element => element.address" 
         :icon="element => element.sport === 'football' ? 'futbol' : element.sport"  
-        @click="openField"/>
+        @open="openField"/>
 
 </template>
 

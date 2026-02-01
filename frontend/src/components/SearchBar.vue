@@ -28,8 +28,6 @@ const model = defineModel()
 
 .search-form {
   width: 100%;
-  display: flex;
-  justify-content: center;
 }
 
 .search {

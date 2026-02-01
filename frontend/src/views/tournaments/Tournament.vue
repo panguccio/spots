@@ -9,7 +9,7 @@ import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
 import Standings from '@/components/Standings.vue'
 import Schedule from '@/components/Schedule.vue'
-import TournamentEdit from '@/components/TournamentEdit.vue'
+import TournamentEdit from '@/views/tournaments/TournamentEdit.vue'
 import { useAuthStore } from '@/store/auth.js'
 
 const { user } = useAuthStore()

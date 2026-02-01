@@ -9,6 +9,7 @@ defineProps({
     default: false
   }
 })
+const emit = defineEmits(['pressed'])
 </script>
 
 <template>
