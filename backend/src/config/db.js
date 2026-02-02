@@ -1,6 +1,6 @@
 "use strict";
 const { MongoClient } = require("mongodb");
-const uri = "mongodb://localhost:27017";
+const uri = "mongodb://mongo-guccione:27017";
 const client = new MongoClient(uri);
 
 let db;

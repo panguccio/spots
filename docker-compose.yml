@@ -1,21 +1,22 @@
-version: "3.8"
-
 services:
-  backend:
+  backend-guccione:
     build: ./backend
+    container_name: backend-guccione
     ports:
       - "3000:3000"
     depends_on:
-      - mongo
+      - mongo-guccione
 
-  frontend:
+  frontend-guccione:
     build: ./frontend
+    container_name: frontend-guccione
     ports:
       - "5173:5173"
     depends_on:
-      - backend
+      - backend-guccione
 
-  mongo:
+  mongo-guccione:
     image: mongo
+    container_name: mongo-guccione
     ports:
       - "27017:27017"
