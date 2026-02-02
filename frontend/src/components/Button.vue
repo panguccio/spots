@@ -2,7 +2,7 @@
 defineProps({
   variant: {
     type: String,
-    default: 'primary' // primary | danger | outline
+    default: 'primary' // primary | danger | dark
   },
   disabled: {
     type: Boolean,
@@ -58,10 +58,15 @@ const emit = defineEmits(['pressed'])
   background: #e84545;
 }
 
-/* OUTLINE */
 
+.dark {
+  background: #1e3c2f;
+  color: white;
+}
 
-/* DISABLED */
+.dark:hover {
+  background: #2d674e;
+}
 
 .btn:disabled {
   opacity: .5;
