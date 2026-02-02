@@ -13,7 +13,7 @@ function timeToIndex(isoTime) {
     const date = new Date(isoTime)
     const hour = date.getHours()
     const minutes = date.getMinutes()
-    return (hour - 9) * 2 + (minutes === 30 ? 1 : 0)
+    return (hour - 9) * 2 + (minutes === 0 ? 0 : 1)
 }
 
 function isBooked(index) {
