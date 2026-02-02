@@ -47,8 +47,8 @@ onMounted(() => {
         </div>
 
       </div>
-
-      <div v-if="open" class="mobile-menu">
+      <div v-if="open" class="menu-overlay"  @click.self="open = false">
+      <div v-if="open" class="mobile-menu"  @click.self="open = false">
 
         <RouterLink :to="{name: 'fields'}">Fields</RouterLink>
         <RouterLink :to="{name: 'tournaments'}">Tournaments</RouterLink>
@@ -66,6 +66,7 @@ onMounted(() => {
         <RouterLink :to="{name: 'profile'}">Profile</RouterLink>
         </div>
 
+      </div>
       </div>
     </nav>
   </div>
@@ -129,18 +130,25 @@ nav {
   cursor: pointer;
 }
 
+.menu-overlay {
+  position: fixed;
+  inset: 0;               /* copre tutto lo schermo */
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: flex-start; /* il menu può stare a sinistra */
+  z-index: 9999;          /* sopra tutto */
+}
+
 .mobile-menu {
-  border-top: white 1px solid;
-  position: absolute;
-  top: 64px;
-  left: 0;
-  width: 100%;
   background: #1e3c2f;
+  width: 250px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 24px;
 }
+
 
 .mobile-menu hr {
   border: none;
