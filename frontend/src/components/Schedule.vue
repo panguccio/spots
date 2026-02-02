@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
     schedule: {
         type: Array,
         required: true
@@ -9,22 +11,35 @@ defineProps({
         required: true
     }
 })
+
+const matchesByRound = computed(() => {
+    const grouped = {}
+    props.schedule.forEach(match => {
+        const round = match.round || 1
+        if (!grouped[round]) {
+            grouped[round] = []
+        }
+        grouped[round].push(match)
+    })
+    return grouped
+})
 </script>
 
 <template>
     <div class="card">
-        <div v-for="match in schedule" :key="match._id" class="match">
-            <RouterLink :to="`/matches/${match._id}`">
-                <div class="teams">
-                    <span class="name">{{ teams[match.team1Id].name }}</span>
-                    <div v-if="match.points1 != undefined" class="points">{{ match.points1 }} - {{ match.points2 }}
+        <div v-for="(matches, round) in matchesByRound" :key="round" class="round-group">
+            <div v-for="match in matches" :key="match._id" class="match">
+                <RouterLink :to="`/matches/${match._id}`">
+                    <div class="teams">
+                        <span class="name">{{ teams[match.team1Id].name }}</span>
+                        <div v-if="match.points1 != undefined" class="points">{{ match.points1 }} - {{ match.points2 }}</div>
+                        <div v-else>
+                            <p class="points">VS</p>
+                        </div>
+                        <span class="name">{{ teams[match.team2Id].name }}</span>
                     </div>
-                    <div v-else>
-                        <p class="points">VS</p>
-                    </div>
-                    <span class="name">{{ teams[match.team2Id].name }}</span>
-                </div>
-            </RouterLink>
+                </RouterLink>
+            </div>
         </div>
     </div>
 </template>
@@ -39,6 +54,14 @@ defineProps({
     width: 100%;
 }
 
+.round-group {
+    border-bottom: 4px solid #2e7d32;
+}
+
+.round-group:last-child {
+    border-bottom: none;
+
+}
 
 .match {
     display: flex;
@@ -53,7 +76,7 @@ defineProps({
     background: #f9fbe7;
 }
 
-.match:last-child {
+.round-group .match:last-child {
     border-bottom: none;
 }
 
@@ -64,11 +87,7 @@ defineProps({
     gap: 16px;
     width: 100%;
     color: #1e3c2f;
-
 }
-
-
-
 
 .teams span {
     flex: 1;
@@ -84,5 +103,4 @@ defineProps({
     color: white;
     background-color: #2e7d32;
 }
-
 </style>

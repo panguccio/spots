@@ -6,6 +6,7 @@ const db = require("../config/db.js");
 const { ObjectId } = require("mongodb");
 let { verifyToken } = require("../modules/jwt.js");
 const { computePoints, points } = require("../utils/points.js");
+const roundRobin = require("../utils/roundrobin.js")
 
 // list of tournaments (query)
 router.get("/", async (req, res) => {
@@ -82,18 +83,39 @@ router.post("/:id/matches/generate", verifyToken, async (req, res) => {
     const filter = { _id: new ObjectId(req.params.id), organizerId: new ObjectId(req.user.id) };
     const tournament = await mongo.collection("tournaments").findOne(filter);
     if (!tournament) return res.status(404).json({ message: "Failed to generate tournament schedule: User is not organizer of this tournament (unauthorized)."});
-    const matchesIds = tournament.matchesIds || [];
     
     await mongo.collection("matches").deleteMany({ tournamentId: new ObjectId(req.params.id) });
 
     const teamIds = tournament.teamsIds;
-    let matches = [];
-
-    for (let i = 0; i < teamIds.length; i++) {
-        for (let j = i + 1; j < teamIds.length; j++) {
-            matches.push({ team1Id: teamIds[i], team2Id: teamIds[j], date: tournament.date, tournamentId: tournament._id, status: "upcoming" });
-        }
+    
+    if (teamIds.length < 2) {
+        return res.status(400).json({ 
+            message: "Failed to generate tournament schedule: Need at least 2 teams."
+        });
     }
+
+    const schedule = roundRobin(teamIds);
+
+    let matches = [];
+    const tournamentDate = new Date(tournament.date);
+
+    schedule.forEach((round, roundIndex) => {
+        
+        const matchDate = new Date(tournamentDate);
+        matchDate.setDate(matchDate.getDate() + roundIndex);
+        
+        round.forEach(([team1Id, team2Id]) => {
+            matches.push({ 
+                team1Id, 
+                team2Id, 
+                date: matchDate,
+                round: roundIndex + 1,
+                tournamentId: tournament._id, 
+                status: "upcoming" 
+            });
+        });
+    });
+
     if (matches.length == 0) {
         res.status(201).json(matches);
     }
