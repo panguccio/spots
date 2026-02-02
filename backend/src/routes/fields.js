@@ -31,7 +31,11 @@ router.get("/:id", async (req, res) => {
 // availability for a specific date (id) (query)
 router.get("/:id/slots", async (req, res) => {
     const date = req.query.q;
-    const { start, end } = getLimitTimes(date, "9:00", "22:00");
+    let { start, end } = getLimitTimes(date, "9:00", "22:00");
+    const now = new Date();
+    if (start < now) {
+        start = now;
+    }
 
     const mongo = await db.connect();
     const filter = {
