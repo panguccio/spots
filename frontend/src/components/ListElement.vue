@@ -40,7 +40,7 @@ const emit = defineEmits(['open'])
   padding: 12px 16px;
   transition: background 0.2s;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 3;
 }
 
 .list-element:hover {
