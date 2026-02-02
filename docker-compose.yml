@@ -1,19 +1,21 @@
-version: "3"
+version: "3.8"
+
 services:
-  app:
-    container_name: app
-    build: .
-    command: nodemon --watch /usr/src/app -e js app.js
+  backend:
+    build: ./backend
     ports:
       - "3000:3000"
-    volumes:
-      - ./app:/usr/src/app
-    links:
-      - "mongo:mongosrv"
-  mongo:
-    container_name: mongo
-    image: mongo
-    volumes:
-      - ./data:/data/db
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
     ports:
-      - '27017:27017'
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
