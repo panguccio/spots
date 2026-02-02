@@ -2,6 +2,8 @@ services:
   backend-guccione:
     build: ./backend
     container_name: backend-guccione
+    environment:
+      - TZ=Europe/Rome
     ports:
       - "3000:3000"
     depends_on:
