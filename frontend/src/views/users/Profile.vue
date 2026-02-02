@@ -38,8 +38,11 @@ async function getBookings() {
 
 onMounted(() => { getUser(), getBookings() })
 
-let formatTime = function (date) {
-  return date.split('T')[1].slice(0, 5)
+let formatTime = function (dateString) {
+  const date = new Date(dateString);
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 
 let deleteBooking = async function (b) {
