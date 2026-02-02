@@ -1,6 +1,6 @@
 <template>
   <div v-if="error" class="error">
-    <p><strong>Error {{ error.status }}</strong></p>
+  <aside>Error {{ error.status }}</aside>
     <p>{{ error.message }}</p>
   </div>
 </template>
@@ -18,5 +18,8 @@ defineProps({
   background-color: #e94646b6;
   padding: 10px;
   border-radius: 4px;
+}
+aside {
+  font-family: monospace;
 }
 </style>
