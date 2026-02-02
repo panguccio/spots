@@ -7,6 +7,7 @@ import Button from '@/components/Button.vue';
 import TeamEdit from '@/views/teams/TeamEdit.vue';
 import Error from "@/components/Error.vue";
 import { useAuthStore } from '@/store/auth.js';
+import Back from '@/components/Back.vue'
 
 const { user } = useAuthStore()
 let loading = ref(true);
@@ -61,8 +62,9 @@ onMounted(async () => {
 <template>
   <div class="team-content">
     <div class="element-card">
-      <div class="top">
-        <h2>Team details</h2>
+    <div class="top">
+        <div class="left"><Back />
+        <h2>Team details</h2></div> 
         <div v-if="user == organizer.username">
           <Button class="edit-button" @pressed="editing = !editing">
             {{ editing ? 'Cancel' : 'Edit' }}
@@ -126,8 +128,19 @@ p {
 .top {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  align-items: center;
 }
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0; /* rimuove spazi extra tra Back e h2 */
+}
+
+.left h2 {
+  margin-left: 8px; /* opzionale: piccolo margine tra bottone e titolo */
+}
+
 article {
   display: flex;
   flex-direction: column;

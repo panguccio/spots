@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 import List from '@/components/List.vue'
 import router from '@/router'
 import Error from '@/components/Error.vue'
+import Back from '@/components/Back.vue'
 
 
 const props = defineProps({
@@ -58,7 +59,12 @@ let openTournament = function (tournament) {
 <template>
   <div class="user">
     <div class="element-card">
-      <h2>{{ title }}</h2>
+      <div class="top">
+        <div class="left">
+          <Back />
+          <h2>{{ title }}</h2>
+        </div>
+      </div>
       <hr />
       <article v-if="!loading">
         <section class="element">
@@ -67,8 +73,7 @@ let openTournament = function (tournament) {
         </section>
         <section class="tournaments">
           <h4>{{ user.name }}'s Tournaments</h4>
-          <List :elementlist="tournaments" :search="false" :name="element => element.name"
-            :info="element => element.date.split('T')[0]"
+          <List :elementlist="tournaments" :name="element => element.name" :info="element => element.date.split('T')[0]"
             :icon="element => element.sport === 'football' ? 'futbol' : element.sport" @open="openTournament" />
         </section>
         <slot />
@@ -111,6 +116,22 @@ h3 {
 h4 {
   font-size: 20px;
   margin-bottom: 8px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0; /* rimuove spazi extra tra Back e h2 */
+}
+
+.left h2 {
+  margin-left: 8px; /* opzionale: piccolo margine tra bottone e titolo */
 }
 
 p,

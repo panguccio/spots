@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { details, slots, book } from "@/services/fields.js";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/store/auth";
+import Back from '@/components/Back.vue'
 
 const { user } = useAuthStore();
 
@@ -55,7 +56,13 @@ onMounted(() => {
 <template>
   <div class="field-content">
     <div class="element-card">
-      <h2>Field Details</h2>
+      <div class="top">
+        <div class="left">
+          <Back />
+          <h2>Field Details</h2>
+        </div>
+      </div>
+
       <hr />
       <div class="element">
         <h3>{{ field.name }}</h3>
@@ -67,43 +74,20 @@ onMounted(() => {
       <div class="slots">
         <div class="picker">
           <h4>Available slots for date:</h4>
-          <input
-            class="time-input"
-            type="date"
-            v-model="selectedDate"
-            @change="getSlots(selectedDate)"
-          />
+          <input class="time-input" type="date" v-model="selectedDate" @change="getSlots(selectedDate)" />
         </div>
         <TimeSlot :freeSlots="freeSlots" />
       </div>
       <div class="booking">
         <h4>Wanna book a slot?</h4>
-        <form
-          v-if="user"
-          class="input"
-          @submit.prevent="
-            bookSlot(fieldId, selectedDate, selectedStartTime, selectedEndTime)
-          "
-        >
+        <form v-if="user" class="input" @submit.prevent="
+          bookSlot(fieldId, selectedDate, selectedStartTime, selectedEndTime)
+          ">
           <div class="picker">
             <p>Start time:</p>
-            <input
-              class="time-input"
-              type="time"
-              v-model="selectedStartTime"
-              min="09:00"
-              max="21:30"
-              value="09:00"
-            />
+            <input class="time-input" type="time" v-model="selectedStartTime" min="09:00" max="21:30" value="09:00" />
             <p>End time:</p>
-            <input
-              class="time-input"
-              type="time"
-              v-model="selectedEndTime"
-              min="09:30"
-              max="22:00"
-              value="22:00"
-            />
+            <input class="time-input" type="time" v-model="selectedEndTime" min="09:30" max="22:00" value="22:00" />
           </div>
           <Button>Book!</Button>
         </form>
@@ -135,6 +119,22 @@ h3 {
 
 h4 {
   font-size: 20px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0; /* rimuove spazi extra tra Back e h2 */
+}
+
+.left h2 {
+  margin-left: 8px; /* opzionale: piccolo margine tra bottone e titolo */
 }
 
 p {

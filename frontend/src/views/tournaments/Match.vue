@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/auth.js'
 import Error from "@/components/Error.vue";
 import Button from '@/components/Button.vue';
 import MatchEdit from '@/views/tournaments/MatchEdit.vue';
+import Back from '@/components/Back.vue'
 
 const { user } = useAuthStore()
 let loading = ref(true);
@@ -59,8 +60,9 @@ onMounted(async () => {
 <template>
   <div class="team-content">
     <div class="element-card">
-      <div class="top">
-        <h2>Match details</h2>
+    <div class="top">
+        <div class="left"><Back />
+        <h2>Match details</h2></div> 
         <div v-if="user == organizer.username">
           <Button class="edit-button" @pressed="editing = !editing">
             {{ editing ? 'Cancel' : 'Edit' }}
@@ -146,7 +148,17 @@ article {
 .top {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  align-items: center;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0; /* rimuove spazi extra tra Back e h2 */
+}
+
+.left h2 {
+  margin-left: 8px; /* opzionale: piccolo margine tra bottone e titolo */
 }
 
 hr {

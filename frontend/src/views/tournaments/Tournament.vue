@@ -4,7 +4,7 @@ import { details, matches, standings } from '@/services/tournaments.js'
 import { details as teamDetails } from '@/services/teams.js'
 import { details as userDetails } from '@/services/users.js'
 import { useRoute } from 'vue-router'
-
+import Back from '@/components/Back.vue'
 import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
 import Standings from '@/components/Standings.vue'
@@ -20,7 +20,7 @@ const tournament = ref({})
 const schedule = ref([])
 const standingsStats = ref([])
 const error = ref(null)
-const teamsNames = ref({});
+const teams = ref({});
 const organizer = ref({})
 let editing = ref(false)
 
@@ -55,13 +55,12 @@ async function getStandings() {
 async function getNames() {
   error.value = null;
   const ids = tournament.value.teamsIds;
-  let teams = {};
   try {
     for (let id of ids) {
       const team = await teamDetails(id);
-      teams[id] = team.name;
+      teams.value[id] = team;
+      console.log(teams)
     }
-    teamsNames.value = teams;
   } catch (err) {
     error.value = err;
   }
@@ -95,8 +94,9 @@ onMounted(async () => { await loadPage() })
 
     <div class="element-card">
       <div class="top">
-        <h2>Tournament details</h2>
-        <div v-if="user == organizer.username">
+        <div class="left"><Back />
+        <h2>Tournament details</h2></div> 
+        <div class="right" v-if="user == organizer.username">
           <Button class="edit-button" @pressed="editing = !editing">
             {{ editing ? 'Cancel' : 'Edit' }}
           </Button>
@@ -105,7 +105,8 @@ onMounted(async () => { await loadPage() })
       <hr />
       <article v-if="!loading">
 
-        <TournamentEdit v-if="editing" :tournament="tournament" @saved="loadPage(); editing = false" />
+        <TournamentEdit v-if="editing" :tournament="tournament" :tournamentTeams="teams"
+          @saved="loadPage(); editing = false" />
 
         <section class="element">
           <h3>{{ tournament.name }}</h3>
@@ -117,16 +118,24 @@ onMounted(async () => { await loadPage() })
               <RouterLink :to="`/users/${organizer._id}`"><strong>Organizer:</strong> {{ organizer.name }} {{
                 organizer.surname }}</RouterLink>
             </p>
+            <h4>Teams</h4>
+            <div class="list">
+            <div v-for="team in teams" :key="team._id" class="team-card">
+              <span class="team-info">
+                {{ team.name }}
+              </span>
+            </div>
+            </div>
           </div>
         </section>
         <section class="schedule">
           <h3>Matches Schedule</h3>
-          <Schedule v-if="schedule.length !== 0" :schedule="schedule" :teamsNames="teamsNames" />
+          <Schedule v-if="schedule.length !== 0" :schedule="schedule" :teams="teams" />
           <p v-else>To generate matches, click <kbd> <samp>Edit</samp> &rightarrow; <samp>New Schedule</samp></kbd></p>
         </section>
         <section class="standings">
           <h3>Standings</h3>
-          <Standings v-if="standingsStats.length !== 0" :standingsStats :teamsNames />
+          <Standings v-if="standingsStats.length !== 0" :standingsStats :teams="teams" />
           <p v-else>No games yet</p>
         </section>
       </article>
@@ -159,6 +168,7 @@ h3 {
 }
 
 h4 {
+  margin-top: 8px;
   font-size: 20px;
 }
 
@@ -166,6 +176,22 @@ h4 {
   display: flex;
   justify-content: space-between;
   gap: 12px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0; /* rimuove spazi extra tra Back e h2 */
+}
+
+.left h2 {
+  margin-left: 8px; /* opzionale: piccolo margine tra bottone e titolo */
 }
 
 p {
@@ -184,6 +210,32 @@ p {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.team-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  font-size: 16px;
+  color: #1e3c2f;
+}
+
+.team-card:hover {
+  background: #f9fbe7;
+}
+
+.team-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+  font-weight: 600;
 }
 
 hr {
@@ -238,6 +290,7 @@ section {
   justify-content: center;
   gap: 8px;
 }
+
 p kbd,
 p samp {
   background: white;
