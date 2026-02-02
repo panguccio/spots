@@ -5,13 +5,16 @@ import Multiselect from 'vue-multiselect'
 import { list as listTeams } from '@/services/teams.js'
 import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
+import router from '@/router'
 
 let loading = ref(true)
+const deleting = ref(false)
 const error = ref(null)
 const teamsNotInTournament = ref([])
 const teamsInTournament = ref([])
 const allTeams = ref([])
 const emit = defineEmits(['saved'])
+
 
 
 const props = defineProps({
@@ -68,6 +71,18 @@ async function loadPage() {
   loading.value = false;
 }
 
+async function deleteTournament() {
+  if (deleting.value) return;
+  deleting.value = true
+  try {
+    await cancel(props.tournament._id)
+    router.replace({ name: 'tournaments' })
+  } catch (err) {
+    error.value = err
+    deleting.value = false
+  }
+}
+
 onMounted(async () => { await loadPage() })
 
 </script>
@@ -96,7 +111,7 @@ onMounted(async () => { await loadPage() })
           placeholder="Select teams" :multiple="true" :searchable="true" />
       </label>
       <div class="buttons">
-      <Button variant="danger" @pressed="cancel(tournament._id)"><font-awesome-icon class="icon" icon="trash"/></Button>
+      <Button variant="danger" @pressed="deleteTournament"><font-awesome-icon class="icon" icon="trash"/></Button>
       <Button variant="danger" @pressed="schedule(tournament._id)">New schedule</Button>
       <Button @pressed="submit">Save</Button>
       </div>

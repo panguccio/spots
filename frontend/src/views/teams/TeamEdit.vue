@@ -5,9 +5,11 @@ import { edit, cancel, listPlayers, createPlayer } from '@/services/teams'
 import Multiselect from 'vue-multiselect'
 import Error from '@/components/Error.vue'
 import Button from '@/components/Button.vue'
+import router from '@/router'
 
 let loading = ref(true)
 const error = ref(null)
+const deleting = ref(false)
 
 const props = defineProps({
   team: { type: Object, default: {} },
@@ -43,7 +45,7 @@ async function submit() {
   try {
     if (form.value.playerName && form.value.playerSurname && form.value.jerseyNumber) {
       const result = await createPlayer(form.value.playerName, form.value.playerSurname, form.value.jerseyNumber)
-      form.value.addPlayers.push({_id: result.insertedId});
+      form.value.addPlayers.push({ _id: result.insertedId });
     }
     await edit(props.team._id, form.value.name, form.value.addPlayers.map(p => p._id), form.value.remPlayers.map(p => p._id))
     emit('saved')
@@ -59,7 +61,21 @@ async function loadPage() {
   loading.value = false;
 }
 
-onMounted(async () => { await loadPage() })
+async function deleteTeam() {
+  if (deleting.value) return;
+  deleting.value = true
+  try {
+    await cancel(props.team._id)
+    router.replace({ name: 'teams' })
+  } catch (err) {
+    error.value = err
+    deleting.value = false
+  }
+}
+
+onMounted(async () => {
+  await loadPage()
+})
 
 </script>
 
@@ -86,8 +102,7 @@ onMounted(async () => { await loadPage() })
         </div>
       </label>
       <div class="buttons">
-        <Button variant="danger" @pressed="cancel(props.team._id)"><font-awesome-icon class="icon"
-            icon="trash" /></Button>
+        <Button variant="danger" @pressed="deleteTeam()"><font-awesome-icon class="icon" icon="trash" /></Button>
         <Button>Save</Button>
       </div>
     </form>

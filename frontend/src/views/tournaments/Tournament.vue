@@ -105,7 +105,7 @@ onMounted(async () => { await loadPage() })
       <hr />
       <article v-if="!loading">
 
-        <TournamentEdit v-if="editing" :tournament="tournament" :tournamentTeams="teams"
+        <TournamentEdit v-if="editing" :tournament="tournament"
           @saved="loadPage(); editing = false" />
 
         <section class="element">
