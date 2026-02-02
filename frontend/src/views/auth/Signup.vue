@@ -18,11 +18,11 @@ const error = ref("");
 async function handleSignup() {
   error.value = "";
   try {
-    const token = await signup(name.value, surname.value, username.value, password.value);
+    const res = await signup(name.value, surname.value, username.value, password.value);
     setAuth(username.value, res.token);
     router.push({ name: "profile" });
   } catch (err) {
-    error.value = err.message;
+    error.value = err;
   }
 }
 </script>

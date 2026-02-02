@@ -76,8 +76,8 @@ let openTournament = function (tournament) {
           <List :elementlist="tournaments" :name="element => element.name" :info="element => element.date.split('T')[0]"
             :icon="element => element.sport === 'football' ? 'futbol' : element.sport" @open="openTournament" />
         </section>
-        <slot />
       </article>
+      <slot />
     </div>
     <Error v-if="error" :error="error" />
   </div>
@@ -127,11 +127,11 @@ h4 {
 .left {
   display: flex;
   align-items: center;
-  gap: 0; /* rimuove spazi extra tra Back e h2 */
+  gap: 0;
 }
 
 .left h2 {
-  margin-left: 8px; /* opzionale: piccolo margine tra bottone e titolo */
+  margin-left: 8px;
 }
 
 p,

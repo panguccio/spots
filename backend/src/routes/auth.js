@@ -31,7 +31,6 @@ router.post("/signup", async (req, res) => {
 
     const mongo = await db.connect();
     const exists = await mongo.collection("users").findOne({ username });
-
     if (exists) {
         return res.status(409).json({ message: "Failed to Signup: Username not available."});
     } else {

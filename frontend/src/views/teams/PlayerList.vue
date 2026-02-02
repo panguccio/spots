@@ -29,7 +29,7 @@ watch(searchTerm, (newTerm) => {
         <h2>Players </h2>
         <div class="search-container">
             <div class="top">
-                <SearchBar class="searchbar" v-model="searchTerm" :placeholder="search" />
+                <SearchBar class="searchbar" v-model="searchTerm" placeholder="Search players" />
             </div>
             <div class="list">
 
@@ -39,6 +39,7 @@ watch(searchTerm, (newTerm) => {
                     </div>
                     <div class="jersey-number">{{ player.jerseyNumber }}</div>
                 </div>
+                <p v-if="playerList.length == 0">Nothing here yet</p>
             </div>
         </div>
     </div>

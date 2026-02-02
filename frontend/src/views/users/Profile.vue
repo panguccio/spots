@@ -58,9 +58,9 @@ let deleteBooking = async function (b) {
   }
 }
 
-let exit = async function() {
+let exit = async function () {
   logout();
-  router.push({name: "home"})
+  router.push({ name: "home" })
 }
 
 
@@ -76,17 +76,17 @@ let exit = async function() {
           <li v-for="b in myBookings" :key="b._id" class="booking-item">
             <span class="date"> {{ b.start.split('T')[0] }} </span>
             <span class="time">{{ formatTime(b.start) }} → {{ formatTime(b.end) }}</span>
-            <span class="delete"><Button variant="danger" @click="deleteBooking(b)"><font-awesome-icon class="icon" icon="trash"/></Button></span>
+            <span class="delete"><Button variant="danger" @click="deleteBooking(b)"><font-awesome-icon class="icon"
+                  icon="trash" /></Button></span>
           </li>
         </ul>
         <p v-if="!myBookings.length">No bookings yet</p>
       </section>
       <section class="logout">
-      <span class="logout-button"><Button variant="danger" @click="exit">Logout</Button></span>
+        <span class="logout-button"><Button variant="danger" @click="exit">Logout</Button></span>
       </section>
     </User>
-    <p v-else>To see your profile,<RouterLink :to="{ name: 'login' }"> login</RouterLink>
-    </p>
+    <p v-else >To see your profile, please <RouterLink :to="{ name: 'login' }"><strong>Login</strong></RouterLink> or <RouterLink :to="{ name: 'signup' }"> <strong>Signup</strong></RouterLink></p>
     <Error v-if="error" :error="error" />
   </div>
 </template>
