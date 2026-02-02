@@ -8,7 +8,8 @@ async function init() {
         
         await mongo.collection("users").createIndex({ username: 1 }, { unique: true });
         console.log("  * Unique index on username ensured.");
-
+        console.log(fieldCount)
+        
         if (fieldCount > 0) {
             console.log("  * DB already initialized. Skipping seeding.");
             return;
@@ -43,7 +44,7 @@ async function init() {
         ]);
         const team1 = await mongo.collection("teams").insertOne({name: "Inter-net", playersIds: Object.values(players1.insertedIds), organizerId: user1.insertedId});
         const team2 = await mongo.collection("teams").insertOne({name: "Salamucci", playersIds: Object.values(players2.insertedIds), organizerId: user1.insertedId});
-        const team3 = await mongo.collection("teams").insertOne({name: "Tune Squad", playersIds: Object.values(players2.insertedIds), organizerId: user2.insertedId});
+        const team3 = await mongo.collection("teams").insertOne({name: "Tune Squad", playersIds: Object.values(players3.insertedIds), organizerId: user2.insertedId});
         await mongo.collection("tournaments").insertMany([
             {name: "L'ultimo scontro", sport: "football", maxTeams: 10, status: "active", date: new Date("2026-02-05"), organizerId: user2.insertedId, teamsIds: [team1.insertedId, team2.insertedId, team3.insertedId]},
             {name: "Torneo dei bambini", sport: "volleyball", maxTeams: 6, status: "active", date: new Date("2026-02-08"), organizerId: user1.insertedId, teamsIds: [team2.insertedId, team3.insertedId]}
