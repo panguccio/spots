@@ -2,7 +2,7 @@
 
 defineProps({
   standingsStats: Array,
-  teamsNames: {}
+  teams: {}
 })
 
 </script>
@@ -22,7 +22,7 @@ defineProps({
         <RouterLink :to="`/teams/${team.id}`">
           <span class="col-team">
             <span class="position">{{ index + 1 }}</span>
-            {{ teamsNames[team.id] }}
+            {{ teams[team.id].name }}
           </span>
         </RouterLink>
         <span class="col-stat">{{ team.played }}</span>

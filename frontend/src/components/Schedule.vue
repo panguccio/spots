@@ -4,7 +4,7 @@ defineProps({
         type: Array,
         required: true
     },
-    teamsNames: {
+    teams: {
         type: Object,
         required: true
     }
@@ -16,13 +16,13 @@ defineProps({
         <div v-for="match in schedule" :key="match._id" class="match">
             <RouterLink :to="`/matches/${match._id}`">
                 <div class="teams">
-                    <span class="name">{{ teamsNames[match.team1Id] }}</span>
+                    <span class="name">{{ teams[match.team1Id].name }}</span>
                     <div v-if="match.points1 != undefined" class="points">{{ match.points1 }} - {{ match.points2 }}
                     </div>
                     <div v-else>
                         <p class="points">VS</p>
                     </div>
-                    <span class="name">{{ teamsNames[match.team2Id] }}</span>
+                    <span class="name">{{ teams[match.team2Id].name }}</span>
                 </div>
             </RouterLink>
         </div>
