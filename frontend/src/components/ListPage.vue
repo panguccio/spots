@@ -17,7 +17,7 @@ const props = defineProps({
     icon: Function,
 })
 
-const emit = defineEmits(['click', 'pressed'])
+const emit = defineEmits(['open', 'pressed'])
 
 async function fetch(term = '') {
   error.value = null
