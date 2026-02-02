@@ -130,11 +130,11 @@ h4 {
 .left {
   display: flex;
   align-items: center;
-  gap: 0; /* rimuove spazi extra tra Back e h2 */
+  gap: 0;
 }
 
 .left h2 {
-  margin-left: 8px; /* opzionale: piccolo margine tra bottone e titolo */
+  margin-left: 8px;
 }
 
 p {
