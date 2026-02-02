@@ -95,7 +95,7 @@ h2 {
 
 .player-card {
   max-width: 500px;
-  min-width: 200px;
+  min-width: 300px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 12px;
   padding: 10px 16px;
