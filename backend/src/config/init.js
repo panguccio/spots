@@ -8,7 +8,6 @@ async function init() {
         
         await mongo.collection("users").createIndex({ username: 1 }, { unique: true });
         console.log("  * Unique index on username ensured.");
-        console.log(fieldCount)
         
         if (fieldCount > 0) {
             console.log("  * DB already initialized. Skipping seeding.");
