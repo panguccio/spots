@@ -89,7 +89,7 @@ onMounted(() => {
 nav {
   position: relative;
   width: 100%;
-  padding: 16px 32px;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
 }
@@ -162,14 +162,21 @@ nav {
   gap: 16px;
 }
 
-a {
+.menu a,
+.mobile-menu a, .left a, .logo a {
+  display: block;
+  padding: 8px 12px;
   color: white;
   text-decoration: none;
 }
 
-a:hover {
+.menu a:hover,
+.mobile-menu a:hover, .left a:hover, .logo a:hover {
+  background: rgba(255,255,255,0.1);
   color: #c2993e;
+  border-radius: 6px;
 }
+
 
 @media (max-width: 800px) {
 
