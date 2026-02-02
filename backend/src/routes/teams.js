@@ -18,12 +18,8 @@ router.get("/", async (req, res) => {
 
 // create new team (body)
 router.post("/", verifyToken, async (req, res) => {
-    const { name } = req.body;
-    if (!name) {
-        return res.status(400).json({ message: "Failed to create team: Missing fields." });
-    }
     const mongo = await db.connect();
-    const team = { name, organizerId: new ObjectId(req.user.id), playersIds: [] }
+    const team = { name: "New Team", organizerId: new ObjectId(req.user.id), playersIds: [] }
     const result = await mongo.collection("teams").insertOne(team)
     res.status(201).json(result);
 })
