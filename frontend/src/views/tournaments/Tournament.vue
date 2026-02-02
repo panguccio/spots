@@ -59,7 +59,6 @@ async function getNames() {
     for (let id of ids) {
       const team = await teamDetails(id);
       teams.value[id] = team;
-      console.log(teams)
     }
   } catch (err) {
     error.value = err;
@@ -122,7 +121,7 @@ onMounted(async () => { await loadPage() })
             <div class="list">
             <div v-for="team in teams" :key="team._id" class="team-card">
               <span class="team-info">
-                {{ team.name }}
+                <RouterLink :to="`/teams/${team._id}`">{{ team.name }}</RouterLink>
               </span>
             </div>
             </div>
