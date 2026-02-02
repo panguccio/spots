@@ -40,7 +40,7 @@ watch(searchTerm, (newTerm) => {
   <div class="list-page">
     <h2>{{ title }}</h2>
     <div class="search-container">
-      <div class="top"> <Button class="create-button" @pressed="$emit('pressed')">+</Button> <SearchBar class="searchbar" v-model="searchTerm" :placeholder="search" /> </div>
+      <div class="top"> <Button class="create-button" @pressed="$emit('pressed')"><font-awesome-icon class="icon" icon="plus"/></Button> <SearchBar class="searchbar" v-model="searchTerm" :placeholder="search" /> </div>
       <div class="list"> <List :elementlist="elementlist" :title :name :info :icon @open="$emit('open', $event)" /> </div>
     </div>
   </div>

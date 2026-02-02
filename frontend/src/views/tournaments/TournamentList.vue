@@ -30,8 +30,13 @@ const newTournament = async function () {
 </template>
 
 <style scoped>
-v::deep(.btn) {
-  height: 60px;
+:deep(.create-button) {
+  font-size: 20px;
   width: 60px;
+  height: 45px;
+  padding: auto;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

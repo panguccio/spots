@@ -21,4 +21,7 @@ let openField = function(field) {
 </template>
 
 <style scoped>
+:deep(.create-button) {
+    display:none;
+}
 </style>
