@@ -5,7 +5,6 @@ import SearchBar from '@/components/SearchBar.vue'
 import ListElement from '@/components/ListElement.vue'
 import Error from '@/components/Error.vue'
 
-const searchTerm = ref('')
 const error = ref(null)
 
 const props = defineProps({
