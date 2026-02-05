@@ -1,3 +1,5 @@
+// source: Scott Sauyet https://stackoverflow.com/questions/77501958/round-robin-algorithm-behaving-strangely-in-javascript
+
 const rotate = (n, xs) => [
   ...xs.slice(xs.length - (n % xs.length)), 
   ...xs.slice(0, xs.length - (n % xs.length))
