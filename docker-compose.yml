@@ -4,8 +4,12 @@ services:
     container_name: backend-guccione
     environment:
       - TZ=Europe/Rome
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo-guccione:27017
+      - JWT_SECRET=supersecret-spots-jwt-key
     ports:
       - "3000:3000"
+    restart: unless-stopped
     depends_on:
       - mongo-guccione
 
@@ -13,12 +17,18 @@ services:
     build: ./frontend
     container_name: frontend-guccione
     ports:
-      - "5173:5173"
+      - "80:80"
+      - "5173:80"
+    restart: unless-stopped
     depends_on:
       - backend-guccione
 
   mongo-guccione:
-    image: mongo
+    image: mongo:7.0
     container_name: mongo-guccione
-    ports:
-      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
